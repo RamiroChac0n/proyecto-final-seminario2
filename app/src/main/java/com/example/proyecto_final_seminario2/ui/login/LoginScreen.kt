@@ -62,6 +62,7 @@ fun LoginScreen(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
+    onCreateAccountClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -83,7 +84,8 @@ fun LoginScreen(
                 state = state,
                 onEmailChange = onEmailChange,
                 onPasswordChange = onPasswordChange,
-                onLoginClick = onLoginClick
+                onLoginClick = onLoginClick,
+                onCreateAccountClick = onCreateAccountClick
             )
         }
     }
@@ -133,7 +135,8 @@ private fun LoginForm(
     state: LoginState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
+    onCreateAccountClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -159,7 +162,10 @@ private fun LoginForm(
                 modifier = Modifier.padding(top = ErrorTopSpacing)
             )
         }
-        LoginActions(onLoginClick = onLoginClick)
+        LoginActions(
+            onLoginClick = onLoginClick,
+            onCreateAccountClick = onCreateAccountClick
+        )
     }
 }
 
@@ -188,7 +194,8 @@ private fun LoginTextField(
 
 @Composable
 private fun LoginActions(
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
+    onCreateAccountClick: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Button(
@@ -207,7 +214,7 @@ private fun LoginActions(
             )
         }
         TextButton(
-            onClick = { },
+            onClick = onCreateAccountClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(ButtonHeight),
@@ -246,7 +253,8 @@ fun LoginScreenPreview() {
             ),
             onEmailChange = {},
             onPasswordChange = {},
-            onLoginClick = {}
+            onLoginClick = {},
+            onCreateAccountClick = {}
         )
     }
 }
