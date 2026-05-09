@@ -1,5 +1,4 @@
-package com.example.proyecto_final_seminario2.data.auth
-
+package com.example.proyecto_final_seminario2.data.auth.repositories
 
 interface LoginRepository {
     suspend fun login(email: String, password: String): Result<Unit>
