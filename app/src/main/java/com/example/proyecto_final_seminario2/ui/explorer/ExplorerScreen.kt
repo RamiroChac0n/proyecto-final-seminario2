@@ -29,6 +29,7 @@ fun ExplorerScreen(
     onCategorySelected: (com.example.proyecto_final_seminario2.data.explorer.models.BusinessCategory) -> Unit,
     onQueryChange: (String) -> Unit,
     onBusinessClick: (Business) -> Unit,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val categories = listOf("Todos", "Restaurantes", "Farmacia", "Ferretería")
@@ -57,7 +58,7 @@ fun ExplorerScreen(
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = onProfileClick,
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Person,

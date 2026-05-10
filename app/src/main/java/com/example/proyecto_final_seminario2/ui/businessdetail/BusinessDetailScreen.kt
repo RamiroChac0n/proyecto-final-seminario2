@@ -55,6 +55,7 @@ private val BorderSoft = Color(0xFFE6EAF0)
 fun BusinessDetailScreen(
     business: Business?,
     onBackClick: () -> Unit,
+    onRateClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -62,7 +63,7 @@ fun BusinessDetailScreen(
         containerColor = DetailBackground,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {},
+                onClick = onRateClick,
                 containerColor = PrimaryBlue,
                 contentColor = Color.White
             ) {
