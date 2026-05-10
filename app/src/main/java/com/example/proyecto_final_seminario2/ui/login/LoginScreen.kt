@@ -1,6 +1,5 @@
 package com.example.proyecto_final_seminario2.ui.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -26,12 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Image
 import com.example.proyecto_final_seminario2.R
 import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
 import com.example.proyecto_final_seminario2.ui.theme.LocalPrimaryDark
@@ -58,6 +58,7 @@ private val LogoImageSize = 96.dp
 private val FormCornerRadius = 4.dp
 private val ActionCornerRadius = 50.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     state: LoginState,
@@ -70,7 +71,7 @@ fun LoginScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(BackgroundColor)
     ) {
         Column(
             modifier = Modifier
@@ -97,22 +98,18 @@ fun LoginScreen(
 private fun LoginHeader() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         LoginLogo()
-
         Spacer(modifier = Modifier.height(SubtitleTopSpacing))
-
         Text(
             text = "Iniciar Sesión",
             fontSize = 28.sp,
             fontWeight = FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onBackground
+            color = TextPrimaryColor
         )
-
         Spacer(modifier = Modifier.height(SubtitleTopSpacing))
-
         Text(
             text = "Consulta y valora servicios locales",
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TextSecondaryColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
@@ -124,7 +121,7 @@ private fun LoginLogo() {
     Box(
         modifier = Modifier
             .size(LogoSize)
-            .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
+            .background(LogoBackgroundColor, CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -154,23 +151,20 @@ private fun LoginForm(
             label = "Correo electrónico",
             placeholder = "tu@correo.com"
         )
-
         LoginTextField(
             value = state.password,
             onValueChange = onPasswordChange,
             label = "Contraseña",
             placeholder = "••••••••"
         )
-
         if (state.errorMessage != null) {
             Text(
                 text = state.errorMessage,
-                color = MaterialTheme.colorScheme.error,
+                color = Color.Red,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = ErrorTopSpacing)
             )
         }
-
         LoginActions(
             onLoginClick = onLoginClick,
             onCreateAccountClick = onCreateAccountClick
@@ -213,33 +207,29 @@ private fun LoginActions(
                 .fillMaxWidth()
                 .height(ButtonHeight),
             shape = RoundedCornerShape(ActionCornerRadius),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+            colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
         ) {
             Text(
                 text = "Iniciar sesión",
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                color = Color.White
             )
         }
-
         TextButton(
             onClick = onCreateAccountClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(ButtonHeight),
             shape = RoundedCornerShape(ActionCornerRadius),
-            colors = ButtonDefaults.textButtonColors(
-                contentColor = MaterialTheme.colorScheme.primary
-            ),
+            colors = ButtonDefaults.textButtonColors(contentColor = PrimaryColor),
             contentPadding = PaddingValues(0.dp)
         ) {
             Text(
                 text = "Crear cuenta",
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                color = PrimaryColor
             )
         }
     }
@@ -247,22 +237,12 @@ private fun LoginActions(
 
 @Composable
 private fun loginTextFieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = MaterialTheme.colorScheme.primary,
-    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-
-    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-
-    focusedContainerColor = MaterialTheme.colorScheme.surface,
-    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-
-    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-
-    focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-
-    cursorColor = MaterialTheme.colorScheme.primary
+    focusedBorderColor = PrimaryColor,
+    unfocusedBorderColor = BorderColor,
+    focusedLabelColor = TextSecondaryColor,
+    unfocusedLabelColor = TextSecondaryColor,
+    focusedContainerColor = BackgroundColor,
+    unfocusedContainerColor = BackgroundColor
 )
 
 @Preview(showBackground = true, widthDp = 390, heightDp = 884)
