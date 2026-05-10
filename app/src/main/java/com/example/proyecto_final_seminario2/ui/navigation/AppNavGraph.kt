@@ -12,6 +12,7 @@ import com.example.proyecto_final_seminario2.ui.register.RegistrationRoute
 object AppDestination {
     const val Login = "login"
     const val Register = "register"
+    const val Explorer = "explorer"
 }
 
 @Composable
@@ -27,6 +28,11 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
             LoginRoute(
                 onCreateAccountClick = {
                     navController.navigate(AppDestination.Register)
+                },
+                onLoginSuccess = {
+                    navController.navigate(AppDestination.Explorer) {
+                        popUpTo(AppDestination.Login) { inclusive = true }
+                    }
                 }
             )
         }
@@ -36,6 +42,9 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
                     navController.popBackStack()
                 }
             )
+        }
+        composable(AppDestination.Explorer) {
+            com.example.proyecto_final_seminario2.ui.explorer.ExplorerRoute()
         }
     }
 }
