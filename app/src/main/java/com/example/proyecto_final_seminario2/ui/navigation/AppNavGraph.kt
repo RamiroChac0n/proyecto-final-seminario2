@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.proyecto_final_seminario2.ui.businessdetail.BusinessDetailRoute
 import com.example.proyecto_final_seminario2.ui.login.LoginRoute
+import com.example.proyecto_final_seminario2.ui.profile.ProfileRoute
 import com.example.proyecto_final_seminario2.ui.rating.RatingFormRoute
 import com.example.proyecto_final_seminario2.ui.register.RegistrationRoute
 
@@ -18,6 +19,7 @@ object AppDestination {
     const val Login = "login"
     const val Register = "register"
     const val Explorer = "explorer"
+    const val Profile = "profile"
     const val BusinessDetail = "business_detail"
     const val RatingForm = "rating_form"
 }
@@ -54,6 +56,23 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
             com.example.proyecto_final_seminario2.ui.explorer.ExplorerRoute(
                 onBusinessClick = { businessId ->
                     navController.navigate("${AppDestination.BusinessDetail}/$businessId")
+                },
+                onProfileClick = {
+                    navController.navigate(AppDestination.Profile)
+                }
+            )
+        }
+        composable(AppDestination.Profile) {
+            ProfileRoute(
+                onExploreClick = {
+                    navController.navigate(AppDestination.Explorer) {
+                        popUpTo(AppDestination.Explorer) { inclusive = true }
+                    }
+                },
+                onLogoutClick = {
+                    navController.navigate(AppDestination.Login) {
+                        popUpTo(AppDestination.Explorer) { inclusive = true }
+                    }
                 }
             )
         }
