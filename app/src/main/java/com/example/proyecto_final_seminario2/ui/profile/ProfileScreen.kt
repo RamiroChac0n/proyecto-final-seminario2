@@ -27,6 +27,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -39,8 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -55,11 +56,6 @@ import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
 import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
 import com.example.proyecto_final_seminario2.ui.theme.LocalTextPrimary
 
-private val ProfileBackground = LocalBackground
-private val PrimaryBlue = LocalPrimary
-private val TextPrimary = LocalTextPrimary
-private val TextMuted = LocalTextMuted
-private val BorderSoft = LocalBorder
 private const val MockAvatarUrl =
     "https://api.dicebear.com/9.x/lorelei/png?seed=tito%40ejemplo.com&size=128"
 
@@ -113,8 +109,10 @@ fun ProfileScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = ProfileBackground,
-        topBar = { ExplorerTopBar(title = "Punto Local") },
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ExplorerTopBar(title = "Punto Local")
+        },
         bottomBar = {
             AppBottomBar(
                 selectedTab = AppTab.Profile,
@@ -130,8 +128,14 @@ fun ProfileScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item { ProfileHeader(onLogoutClick = onLogoutClick) }
-            item { TotalReviewsCard(total = 42) }
+            item {
+                ProfileHeader(onLogoutClick = onLogoutClick)
+            }
+
+            item {
+                TotalReviewsCard(total = 42)
+            }
+
             item {
                 HistoryHeader(
                     canClear = historyReviews.isNotEmpty(),
@@ -145,7 +149,10 @@ fun ProfileScreen(
                     HistoryCard(review = review)
                 }
             }
-            item { Spacer(modifier = Modifier.height(12.dp)) }
+
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
     }
 }
@@ -213,8 +220,11 @@ private fun ProfileHeader(onLogoutClick: () -> Unit) {
     ) {
         Surface(
             shape = CircleShape,
-            color = Color.White,
-            border = BorderStroke(1.dp, BorderSoft),
+            color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline
+            ),
             modifier = Modifier.size(76.dp)
         ) {
             AsyncImage(
@@ -226,26 +236,39 @@ private fun ProfileHeader(onLogoutClick: () -> Unit) {
                 contentScale = ContentScale.Crop
             )
         }
+
         Spacer(modifier = Modifier.height(14.dp))
+
         Text(
             text = "Tito Calderon",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = TextPrimary
+            color = MaterialTheme.colorScheme.onBackground
         )
+
         Text(
             text = "tito@ejemplo.com",
             fontSize = 13.sp,
-            color = TextMuted
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
         Spacer(modifier = Modifier.height(12.dp))
+
         OutlinedButton(
             onClick = onLogoutClick,
             shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFD92D20)),
-            border = BorderStroke(1.dp, Color(0xFFD92D20))
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+            ),
+            border = BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.error
+            )
         ) {
-            Text(text = "Cerrar sesion", fontSize = 12.sp)
+            Text(
+                text = "Cerrar sesion",
+                fontSize = 12.sp
+            )
         }
     }
 }
@@ -254,11 +277,14 @@ private fun ProfileHeader(onLogoutClick: () -> Unit) {
 private fun TotalReviewsCard(total: Int) {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = BorderStroke(1.dp, BorderSoft),
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize()
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outline
+        ),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -266,31 +292,34 @@ private fun TotalReviewsCard(total: Int) {
         ) {
             Surface(
                 shape = CircleShape,
-                color = PrimaryBlue,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(44.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = Icons.Filled.Star,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
             }
+
             Spacer(modifier = Modifier.width(16.dp))
+
             Column {
                 Text(
                     text = "TOTAL VALORACIONES",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = TextMuted
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
                 Text(
                     text = total.toString(),
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
-                    color = PrimaryBlue
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -301,11 +330,14 @@ private fun TotalReviewsCard(total: Int) {
 private fun HistoryCard(review: ProfileReview) {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = BorderStroke(1.dp, BorderSoft),
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize()
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outline
+        ),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.Top) {
@@ -314,37 +346,49 @@ private fun HistoryCard(review: ProfileReview) {
                         text = review.businessName,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
+
                     Text(
                         text = review.category.uppercase(),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF008C96)
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
+
                 Text(
                     text = review.date,
                     fontSize = 10.sp,
-                    color = TextMuted
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+
             Spacer(modifier = Modifier.height(10.dp))
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RatingBadge(rating = review.rating)
-                Text(text = review.priceRange, fontSize = 11.sp, color = TextPrimary)
+
+                Text(
+                    text = review.priceRange,
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
                 Text(
                     text = "${review.recommendationPercent}% recomienda",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = TextPrimary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
+
             if (review.tags.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
+
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     review.tags.take(2).forEach { tag ->
                         QualityPill(text = tag)
@@ -359,22 +403,27 @@ private fun HistoryCard(review: ProfileReview) {
 private fun RatingBadge(rating: Float) {
     Row(
         modifier = Modifier
-            .background(PrimaryBlue, RoundedCornerShape(4.dp))
+            .background(
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(4.dp)
+            )
             .padding(horizontal = 7.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Filled.Star,
             contentDescription = null,
-            tint = Color.White,
+            tint = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier.size(12.dp)
         )
+
         Spacer(modifier = Modifier.width(3.dp))
+
         Text(
             text = rating.toString(),
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }
@@ -383,7 +432,7 @@ private fun RatingBadge(rating: Float) {
 private fun QualityPill(text: String) {
     Surface(
         shape = RoundedCornerShape(50),
-        color = Color(0xFFF3F5F8)
+        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
