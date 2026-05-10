@@ -45,11 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
-import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
-import com.example.proyecto_final_seminario2.ui.theme.LocalBorder
-import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
-import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
-import com.example.proyecto_final_seminario2.ui.theme.LocalTextPrimary
+
 
 private val DetailBackground = LocalBackground
 private val PrimaryBlue = LocalPrimary

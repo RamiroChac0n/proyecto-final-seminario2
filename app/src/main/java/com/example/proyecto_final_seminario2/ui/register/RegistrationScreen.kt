@@ -30,22 +30,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyecto_final_seminario2.R
-import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
-import com.example.proyecto_final_seminario2.ui.theme.LocalPrimaryDark
-import com.example.proyecto_final_seminario2.ui.theme.LocalPrimarySoft
 import com.example.proyecto_final_seminario2.ui.theme.Proyectofinalseminario2Theme
-private val BackgroundColor = LocalBackground
-private val PrimaryColor = LocalPrimaryDark
-private val TextPrimaryColor = Color(0xFF1C1B1F)
-private val TextSecondaryColor = Color(0xFF414750)
-private val BorderColor = Color(0xFF717881)
-private val LogoBackgroundColor = LocalPrimarySoft
+
 private val LogoSize = 120.dp
 private val ButtonHeight = 48.dp
 private val FieldHeight = 56.dp
@@ -89,7 +82,7 @@ fun RegistrationRoute(
         modifier = modifier
     )
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun RegistrationScreen(
     state: RegistrationState,
@@ -279,6 +272,66 @@ fun RegistrationScreen(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RegistrationTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    placeholder: String,
+    enabled: Boolean,
+    isPassword: Boolean = false
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = {
+            Text(text = label)
+        },
+        placeholder = {
+            Text(text = placeholder)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(FieldHeight),
+        shape = RoundedCornerShape(FormCornerRadius),
+        singleLine = true,
+        enabled = enabled,
+        visualTransformation = if (isPassword) {
+            PasswordVisualTransformation()
+        } else {
+            VisualTransformation.None
+        },
+        colors = registrationTextFieldColors()
+    )
+}
+
+@Composable
+private fun registrationTextFieldColors() = OutlinedTextFieldDefaults.colors(
+    focusedBorderColor = MaterialTheme.colorScheme.primary,
+    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+    disabledBorderColor = MaterialTheme.colorScheme.outline,
+
+    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+
+    focusedContainerColor = MaterialTheme.colorScheme.surface,
+    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+    disabledContainerColor = MaterialTheme.colorScheme.surface,
+
+    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+    disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+
+    focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+
+    cursorColor = MaterialTheme.colorScheme.primary
+)
+
 @Preview(showBackground = true, widthDp = 390, heightDp = 884)
 @Composable
 fun RegistrationScreenPreview() {
