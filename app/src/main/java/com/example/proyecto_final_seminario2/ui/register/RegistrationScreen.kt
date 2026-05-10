@@ -43,16 +43,16 @@ private val TextPrimaryColor = Color(0xFF1C1B1F)
 private val TextSecondaryColor = Color(0xFF414750)
 private val BorderColor = Color(0xFF717881)
 private val LogoBackgroundColor = Color(0xFFEFF4FD)
-private val LogoSize = 104.dp
-private val ButtonHeight = 44.dp
-private val FieldHeight = 50.dp
+private val LogoSize = 120.dp
+private val ButtonHeight = 48.dp
+private val FieldHeight = 56.dp
 private val ScreenHorizontalPadding = 16.dp
 private val ScreenVerticalPadding = 24.dp
 private val LogoTopSpacing = 56.dp
-private val HeaderSpacing = 32.dp
-private val SubtitleTopSpacing = 8.dp
-private val FieldSpacing = 16.dp
-private val LogoImageSize = 88.dp
+private val HeaderSpacing = 48.dp
+private val SubtitleTopSpacing = 12.dp
+private val FieldSpacing = 24.dp
+private val LogoImageSize = 96.dp
 private val FormCornerRadius = 4.dp
 private val ActionCornerRadius = 50.dp
 data class RegistrationState(
@@ -142,7 +142,7 @@ fun RegistrationScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(FieldSpacing)
         ) {
-            OutlinedTextField(
+             OutlinedTextField(
                 value = state.name,
                 onValueChange = onNameChange,
                 label = { Text("Nombre") },
@@ -159,7 +159,9 @@ fun RegistrationScreen(
                     focusedLabelColor = TextSecondaryColor,
                     unfocusedLabelColor = TextSecondaryColor,
                     focusedContainerColor = BackgroundColor,
-                    unfocusedContainerColor = BackgroundColor
+                    unfocusedContainerColor = BackgroundColor,
+                    focusedTextColor = TextPrimaryColor,
+                    unfocusedTextColor = TextPrimaryColor
                 )
             )
             OutlinedTextField(
@@ -179,7 +181,9 @@ fun RegistrationScreen(
                     focusedLabelColor = TextSecondaryColor,
                     unfocusedLabelColor = TextSecondaryColor,
                     focusedContainerColor = BackgroundColor,
-                    unfocusedContainerColor = BackgroundColor
+                    unfocusedContainerColor = BackgroundColor,
+                    focusedTextColor = TextPrimaryColor,
+                    unfocusedTextColor = TextPrimaryColor
                 )
             )
             OutlinedTextField(
@@ -200,7 +204,9 @@ fun RegistrationScreen(
                     focusedLabelColor = TextSecondaryColor,
                     unfocusedLabelColor = TextSecondaryColor,
                     focusedContainerColor = BackgroundColor,
-                    unfocusedContainerColor = BackgroundColor
+                    unfocusedContainerColor = BackgroundColor,
+                    focusedTextColor = TextPrimaryColor,
+                    unfocusedTextColor = TextPrimaryColor
                 )
             )
             OutlinedTextField(
@@ -221,7 +227,9 @@ fun RegistrationScreen(
                     focusedLabelColor = TextSecondaryColor,
                     unfocusedLabelColor = TextSecondaryColor,
                     focusedContainerColor = BackgroundColor,
-                    unfocusedContainerColor = BackgroundColor
+                    unfocusedContainerColor = BackgroundColor,
+                    focusedTextColor = TextPrimaryColor,
+                    unfocusedTextColor = TextPrimaryColor
                 )
             )
             if (errorMessage != null) {
