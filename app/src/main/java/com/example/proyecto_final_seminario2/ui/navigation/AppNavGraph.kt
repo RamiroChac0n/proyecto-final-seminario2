@@ -1,5 +1,6 @@
 package com.example.proyecto_final_seminario2.ui.navigation
 
+import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.proyecto_final_seminario2.ui.businessdetail.BusinessDetailRoute
 import com.example.proyecto_final_seminario2.ui.login.LoginRoute
+import com.example.proyecto_final_seminario2.ui.rating.RatingFormRoute
 import com.example.proyecto_final_seminario2.ui.register.RegistrationRoute
 
 object AppDestination {
@@ -17,6 +19,7 @@ object AppDestination {
     const val Register = "register"
     const val Explorer = "explorer"
     const val BusinessDetail = "business_detail"
+    const val RatingForm = "rating_form"
 }
 
 @Composable
@@ -62,9 +65,26 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
                 businessId = backStackEntry.arguments?.getString("businessId").orEmpty(),
                 onBackClick = {
                     navController.popBackStack()
+                },
+                onRateClick = { businessId ->
+                    navController.navigate("${AppDestination.RatingForm}/${Uri.encode(businessId)}")
+                }
+            )
+        }
+        composable(
+            route = "${AppDestination.RatingForm}/{businessId}",
+            arguments = listOf(navArgument("businessId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            RatingFormRoute(
+                businessId = backStackEntry.arguments?.getString("businessId").orEmpty(),
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onSubmitClick = { ratingFormData ->
+                    // TODO: Send ratingFormData to the backend rating endpoint when the API is ready.
+                    navController.popBackStack()
                 }
             )
         }
     }
 }
-

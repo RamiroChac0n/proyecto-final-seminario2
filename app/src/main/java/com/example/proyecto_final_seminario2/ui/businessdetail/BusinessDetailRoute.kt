@@ -8,6 +8,7 @@ import com.example.proyecto_final_seminario2.data.explorer.mock.ExplorerMockData
 fun BusinessDetailRoute(
     businessId: String,
     onBackClick: () -> Unit,
+    onRateClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val business = ExplorerMockData.businesses.firstOrNull { it.id == businessId }
@@ -15,6 +16,7 @@ fun BusinessDetailRoute(
     BusinessDetailScreen(
         business = business,
         onBackClick = onBackClick,
+        onRateClick = { onRateClick(businessId) },
         modifier = modifier
     )
 }
