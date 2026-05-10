@@ -33,14 +33,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import com.example.proyecto_final_seminario2.R
+import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
+import com.example.proyecto_final_seminario2.ui.theme.LocalPrimaryDark
+import com.example.proyecto_final_seminario2.ui.theme.LocalPrimarySoft
 import com.example.proyecto_final_seminario2.ui.theme.Proyectofinalseminario2Theme
 
-private val BackgroundColor = Color(0xFFF8F9FF)
-private val PrimaryColor = Color(0xFF004471)
+private val BackgroundColor = LocalBackground
+private val PrimaryColor = LocalPrimaryDark
 private val TextPrimaryColor = Color(0xFF1C1B1F)
 private val TextSecondaryColor = Color(0xFF414750)
 private val BorderColor = Color(0xFF717881)
-private val LogoBackgroundColor = Color(0xFFEFF4FD)
+private val LogoBackgroundColor = LocalPrimarySoft
 private val LogoSize = 120.dp
 private val ButtonHeight = 48.dp
 private val FieldHeight = 64.dp
