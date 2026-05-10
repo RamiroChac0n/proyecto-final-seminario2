@@ -1,6 +1,7 @@
 package com.example.proyecto_final_seminario2.ui.explorer.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -116,8 +117,18 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit, modifier: Modifier
 }
 
 @Composable
-fun BusinessCard(item: Business, modifier: Modifier = Modifier) {
-    Card(modifier = modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)) {
+fun BusinessCard(
+    item: Business,
+    onClick: (Business) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick(item) },
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 AsyncImage(model = item.imageUrl, contentDescription = null, modifier = Modifier.size(80.dp).clip(RoundedCornerShape(8.dp)), contentScale = ContentScale.Crop)
@@ -156,10 +167,18 @@ fun BusinessCard(item: Business, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BusinessList(items: List<Business>, modifier: Modifier = Modifier) {
+fun BusinessList(
+    items: List<Business>,
+    onBusinessClick: (Business) -> Unit,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         items(items) { b ->
-            BusinessCard(item = b, modifier = Modifier.padding(horizontal = 12.dp))
+            BusinessCard(
+                item = b,
+                onClick = onBusinessClick,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
         }
     }
 }
