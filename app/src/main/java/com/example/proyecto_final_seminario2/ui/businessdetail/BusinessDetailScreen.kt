@@ -1,5 +1,6 @@
 package com.example.proyecto_final_seminario2.ui.businessdetail
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,12 +45,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
+import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
+import com.example.proyecto_final_seminario2.ui.theme.LocalBorder
+import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
+import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
+import com.example.proyecto_final_seminario2.ui.theme.LocalTextPrimary
 
-private val DetailBackground = Color(0xFFFBF8FC)
-private val PrimaryBlue = Color(0xFF00527F)
-private val TextPrimary = Color(0xFF202124)
-private val TextMuted = Color(0xFF667085)
-private val BorderSoft = Color(0xFFE6EAF0)
+private val DetailBackground = LocalBackground
+private val PrimaryBlue = LocalPrimary
+private val TextPrimary = LocalTextPrimary
+private val TextMuted = LocalTextMuted
+private val BorderSoft = LocalBorder
 
 @Composable
 fun BusinessDetailScreen(
@@ -126,6 +132,7 @@ private fun DetailHero(business: Business) {
             .fillMaxWidth()
             .aspectRatio(1.7f)
             .clip(RoundedCornerShape(2.dp))
+            .animateContentSize()
     ) {
         AsyncImage(
             model = business.imageUrl,
@@ -237,7 +244,9 @@ private fun MetricCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.height(88.dp),
+        modifier = modifier
+            .height(88.dp)
+            .animateContentSize(),
         shape = RoundedCornerShape(6.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
@@ -278,7 +287,9 @@ private fun RecommendationCard(business: Business) {
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF0066A0)),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -328,7 +339,7 @@ private fun HighlightedQualities(tags: List<String>) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Star,
+                            imageVector = qualityIcon(tag),
                             contentDescription = null,
                             tint = Color(0xFF475467),
                             modifier = Modifier.size(12.dp)
@@ -343,6 +354,15 @@ private fun HighlightedQualities(tags: List<String>) {
                 }
             }
         }
+    }
+}
+
+private fun qualityIcon(tag: String): ImageVector {
+    val normalized = tag.lowercase()
+    return when {
+        "precio" in normalized -> Icons.Filled.AttachMoney
+        "puntual" in normalized || "rapida" in normalized || "rapido" in normalized -> Icons.Filled.AccessTime
+        else -> Icons.Filled.Star
     }
 }
 

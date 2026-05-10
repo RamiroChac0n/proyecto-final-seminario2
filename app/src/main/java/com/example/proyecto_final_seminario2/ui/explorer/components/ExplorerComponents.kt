@@ -1,7 +1,7 @@
 package com.example.proyecto_final_seminario2.ui.explorer.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
@@ -35,12 +37,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
+import com.example.proyecto_final_seminario2.ui.theme.LocalPrimaryDark
+import com.example.proyecto_final_seminario2.ui.theme.pressScaleClickable
 
 @Composable
 fun ExplorerTopBar(title: String, modifier: Modifier = Modifier) {
@@ -52,7 +57,7 @@ fun ExplorerTopBar(title: String, modifier: Modifier = Modifier) {
                 Icon(
                     imageVector = Icons.Filled.LocationOn,
                     contentDescription = null,
-                    tint = Color(0xFF004471),
+                    tint = LocalPrimaryDark,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(text = title, fontWeight = FontWeight.SemiBold)
@@ -125,7 +130,8 @@ fun BusinessCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick(item) },
+            .pressScaleClickable { onClick(item) }
+            .animateContentSize(),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
@@ -156,13 +162,34 @@ fun BusinessCard(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 item.tags.take(3).forEach { tag ->
                     Surface(shape = RoundedCornerShape(8.dp), color = Color(0xFFF3F4F6)) {
-                        Text(text = tag, modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp), fontSize = 12.sp, color = Color(0xFF374151))
+                        Row(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = qualityIcon(tag),
+                                contentDescription = null,
+                                tint = Color(0xFF475467),
+                                modifier = Modifier.size(12.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = tag, fontSize = 12.sp, color = Color(0xFF374151))
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Text(text = "Ver detalle >", color = Color(0xFF2563EB), fontSize = 13.sp)
             }
         }
+    }
+}
+
+private fun qualityIcon(tag: String): ImageVector {
+    val normalized = tag.lowercase()
+    return when {
+        "precio" in normalized -> Icons.Filled.AttachMoney
+        "puntual" in normalized || "rapida" in normalized || "rapido" in normalized -> Icons.Filled.AccessTime
+        else -> Icons.Filled.Star
     }
 }
 

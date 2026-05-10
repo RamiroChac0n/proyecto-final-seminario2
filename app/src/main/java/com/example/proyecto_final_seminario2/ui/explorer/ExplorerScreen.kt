@@ -2,26 +2,19 @@ package com.example.proyecto_final_seminario2.ui.explorer
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Explore
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.Color
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
 import com.example.proyecto_final_seminario2.ui.explorer.components.BusinessList
 import com.example.proyecto_final_seminario2.ui.explorer.components.CategoryChips
 import com.example.proyecto_final_seminario2.ui.explorer.components.ExplorerHeader
 import com.example.proyecto_final_seminario2.ui.explorer.components.SearchBar
 import com.example.proyecto_final_seminario2.ui.explorer.components.ExplorerTopBar
+import com.example.proyecto_final_seminario2.ui.navigation.AppBottomBar
+import com.example.proyecto_final_seminario2.ui.navigation.AppTab
 
 @Composable
 fun ExplorerScreen(
@@ -44,30 +37,11 @@ fun ExplorerScreen(
         modifier = modifier.fillMaxSize(),
         topBar = { ExplorerTopBar(title = "Punto Local") },
         bottomBar = {
-            NavigationBar(containerColor = Color.White) {
-                NavigationBarItem(
-                    selected = true,
-                    onClick = {},
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Explore,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(text = "Explorar") }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = onProfileClick,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(text = "Perfil") }
-                )
-            }
+            AppBottomBar(
+                selectedTab = AppTab.Explore,
+                onExploreClick = {},
+                onProfileClick = onProfileClick
+            )
         }
     ) { padding ->
         Column(modifier = Modifier
