@@ -1,5 +1,6 @@
 package com.example.proyecto_final_seminario2.ui.profile
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,36 +19,47 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Explore
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.proyecto_final_seminario2.ui.explorer.components.ExplorerTopBar
+import com.example.proyecto_final_seminario2.ui.navigation.AppBottomBar
+import com.example.proyecto_final_seminario2.ui.navigation.AppTab
+import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
+import com.example.proyecto_final_seminario2.ui.theme.LocalBorder
+import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
+import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
+import com.example.proyecto_final_seminario2.ui.theme.LocalTextPrimary
 
-private val ProfileBackground = Color(0xFFF8F9FE)
-private val PrimaryBlue = Color(0xFF00527F)
-private val TextPrimary = Color(0xFF202124)
-private val TextMuted = Color(0xFF667085)
-private val BorderSoft = Color(0xFFE3E8EF)
+private val ProfileBackground = LocalBackground
+private val PrimaryBlue = LocalPrimary
+private val TextPrimary = LocalTextPrimary
+private val TextMuted = LocalTextMuted
+private val BorderSoft = LocalBorder
 private const val MockAvatarUrl =
     "https://api.dicebear.com/9.x/lorelei/png?seed=tito%40ejemplo.com&size=128"
 
@@ -97,35 +109,18 @@ fun ProfileScreen(
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var historyReviews by remember { mutableStateOf(mockReviews) }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = ProfileBackground,
         topBar = { ExplorerTopBar(title = "Punto Local") },
         bottomBar = {
-            NavigationBar(containerColor = Color.White) {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = onExploreClick,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Explore,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(text = "Explorar") }
-                )
-                NavigationBarItem(
-                    selected = true,
-                    onClick = {},
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(text = "Perfil") }
-                )
-            }
+            AppBottomBar(
+                selectedTab = AppTab.Profile,
+                onExploreClick = onExploreClick,
+                onProfileClick = {}
+            )
         }
     ) { padding ->
         LazyColumn(
@@ -138,18 +133,73 @@ fun ProfileScreen(
             item { ProfileHeader(onLogoutClick = onLogoutClick) }
             item { TotalReviewsCard(total = 42) }
             item {
-                Text(
-                    text = "Historial",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary
+                HistoryHeader(
+                    canClear = historyReviews.isNotEmpty(),
+                    onClearClick = { historyReviews = emptyList() }
                 )
             }
-            items(mockReviews) { review ->
-                HistoryCard(review = review)
+            if (historyReviews.isEmpty()) {
+                item { EmptyHistoryCard() }
+            } else {
+                items(historyReviews) { review ->
+                    HistoryCard(review = review)
+                }
             }
             item { Spacer(modifier = Modifier.height(12.dp)) }
         }
+    }
+}
+
+@Composable
+private fun HistoryHeader(
+    canClear: Boolean,
+    onClearClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Historial",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = TextPrimary,
+            modifier = Modifier.weight(1f)
+        )
+        OutlinedButton(
+            onClick = onClearClick,
+            enabled = canClear,
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFD92D20)),
+            border = BorderStroke(1.dp, if (canClear) Color(0xFFD92D20) else BorderSoft)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.DeleteOutline,
+                contentDescription = null,
+                modifier = Modifier.size(14.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(text = "Borrar", fontSize = 12.sp)
+        }
+    }
+}
+
+@Composable
+private fun EmptyHistoryCard() {
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(1.dp, BorderSoft),
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
+    ) {
+        Text(
+            text = "No hay valoraciones en el historial.",
+            fontSize = 13.sp,
+            color = TextMuted,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
@@ -206,7 +256,9 @@ private fun TotalReviewsCard(total: Int) {
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = BorderStroke(1.dp, BorderSoft),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -251,7 +303,9 @@ private fun HistoryCard(review: ProfileReview) {
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = BorderStroke(1.dp, BorderSoft),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.Top) {
@@ -331,12 +385,31 @@ private fun QualityPill(text: String) {
         shape = RoundedCornerShape(50),
         color = Color(0xFFF3F5F8)
     ) {
-        Text(
-            text = text.uppercase(),
-            fontSize = 10.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = TextMuted,
+        Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
-        )
+        ) {
+            Icon(
+                imageVector = qualityIcon(text),
+                contentDescription = null,
+                tint = TextMuted,
+                modifier = Modifier.size(12.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = text.uppercase(),
+                fontSize = 10.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = TextMuted
+            )
+        }
+    }
+}
+
+private fun qualityIcon(tag: String): ImageVector {
+    val normalized = tag.lowercase()
+    return when {
+        "precio" in normalized -> Icons.Filled.AttachMoney
+        "puntual" in normalized || "rapida" in normalized || "rapido" in normalized -> Icons.Filled.AccessTime
+        else -> Icons.Filled.Star
     }
 }
