@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun ExplorerRoute(
+    onBusinessClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val vm: ExplorerViewModel = viewModel()
@@ -17,7 +18,7 @@ fun ExplorerRoute(
         state = uiState,
         onCategorySelected = vm::selectCategory,
         onQueryChange = vm::setQuery,
+        onBusinessClick = { business -> onBusinessClick(business.id) },
         modifier = modifier
     )
 }
-

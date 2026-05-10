@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import com.example.proyecto_final_seminario2.data.explorer.models.Business
 import com.example.proyecto_final_seminario2.ui.explorer.components.BusinessList
 import com.example.proyecto_final_seminario2.ui.explorer.components.CategoryChips
 import com.example.proyecto_final_seminario2.ui.explorer.components.ExplorerHeader
@@ -27,6 +28,7 @@ fun ExplorerScreen(
     state: ExplorerUiState,
     onCategorySelected: (com.example.proyecto_final_seminario2.data.explorer.models.BusinessCategory) -> Unit,
     onQueryChange: (String) -> Unit,
+    onBusinessClick: (Business) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val categories = listOf("Todos", "Restaurantes", "Farmacia", "Ferretería")
@@ -83,7 +85,11 @@ fun ExplorerScreen(
                 onCategorySelected(cat)
             }, modifier = Modifier.padding(top = 8.dp, bottom = 12.dp))
 
-            BusinessList(items = state.filtered, modifier = Modifier.padding(top = 12.dp))
+            BusinessList(
+                items = state.filtered,
+                onBusinessClick = onBusinessClick,
+                modifier = Modifier.padding(top = 12.dp)
+            )
         }
     }
 }
