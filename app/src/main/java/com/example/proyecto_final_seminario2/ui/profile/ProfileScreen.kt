@@ -50,6 +50,11 @@ import com.example.proyecto_final_seminario2.ui.explorer.components.ExplorerTopB
 import com.example.proyecto_final_seminario2.ui.navigation.AppBottomBar
 import com.example.proyecto_final_seminario2.ui.navigation.AppTab
 
+private val ProfileBackground = LocalBackground
+private val PrimaryBlue = LocalPrimary
+private val TextPrimary = LocalTextPrimary
+private val TextMuted = LocalTextMuted
+private val BorderSoft = LocalBorder
 private const val MockAvatarUrl =
     "https://api.dicebear.com/9.x/lorelei/png?seed=tito%40ejemplo.com&size=128"
 
@@ -103,10 +108,8 @@ fun ProfileScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            ExplorerTopBar(title = "Punto Local")
-        },
+        containerColor = ProfileBackground,
+        topBar = { ExplorerTopBar(title = "Punto Local") },
         bottomBar = {
             AppBottomBar(
                 selectedTab = AppTab.Profile,
@@ -122,14 +125,8 @@ fun ProfileScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item {
-                ProfileHeader(onLogoutClick = onLogoutClick)
-            }
-
-            item {
-                TotalReviewsCard(total = 42)
-            }
-
+            item { ProfileHeader(onLogoutClick = onLogoutClick) }
+            item { TotalReviewsCard(total = 42) }
             item {
                 HistoryHeader(
                     canClear = historyReviews.isNotEmpty(),
@@ -146,10 +143,7 @@ fun ProfileScreen(
                     HistoryCard(review = review)
                 }
             }
-
-            item {
-                Spacer(modifier = Modifier.height(12.dp))
-            }
+            item { Spacer(modifier = Modifier.height(12.dp)) }
         }
     }
 }
@@ -238,11 +232,8 @@ private fun ProfileHeader(onLogoutClick: () -> Unit) {
     ) {
         Surface(
             shape = CircleShape,
-            color = MaterialTheme.colorScheme.surface,
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline
-            ),
+            color = Color.White,
+            border = BorderStroke(1.dp, BorderSoft),
             modifier = Modifier.size(76.dp)
         ) {
             AsyncImage(
@@ -254,39 +245,26 @@ private fun ProfileHeader(onLogoutClick: () -> Unit) {
                 contentScale = ContentScale.Crop
             )
         }
-
         Spacer(modifier = Modifier.height(14.dp))
-
         Text(
             text = "Tito Calderon",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
+            color = TextPrimary
         )
-
         Text(
             text = "tito@ejemplo.com",
             fontSize = 13.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextMuted
         )
-
         Spacer(modifier = Modifier.height(12.dp))
-
         OutlinedButton(
             onClick = onLogoutClick,
             shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = MaterialTheme.colorScheme.error
-            ),
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.error
-            )
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFD92D20)),
+            border = BorderStroke(1.dp, Color(0xFFD92D20))
         ) {
-            Text(
-                text = "Cerrar sesion",
-                fontSize = 12.sp
-            )
+            Text(text = "Cerrar sesion", fontSize = 12.sp)
         }
     }
 }
@@ -295,14 +273,11 @@ private fun ProfileHeader(onLogoutClick: () -> Unit) {
 private fun TotalReviewsCard(total: Int) {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outline
-        ),
-        modifier = Modifier.fillMaxWidth()
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(1.dp, BorderSoft),
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -310,34 +285,31 @@ private fun TotalReviewsCard(total: Int) {
         ) {
             Surface(
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary,
+                color = PrimaryBlue,
                 modifier = Modifier.size(44.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = Icons.Filled.Star,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
+                        tint = Color.White,
                         modifier = Modifier.size(24.dp)
                     )
                 }
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column {
                 Text(
                     text = "TOTAL VALORACIONES",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = TextMuted
                 )
-
                 Text(
                     text = total.toString(),
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = PrimaryBlue
                 )
             }
         }
@@ -348,14 +320,11 @@ private fun TotalReviewsCard(total: Int) {
 private fun HistoryCard(review: ProfileReview) {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outline
-        ),
-        modifier = Modifier.fillMaxWidth()
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(1.dp, BorderSoft),
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.Top) {
@@ -364,49 +333,37 @@ private fun HistoryCard(review: ProfileReview) {
                         text = review.businessName,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = TextPrimary
                     )
-
                     Text(
                         text = review.category.uppercase(),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = Color(0xFF008C96)
                     )
                 }
-
                 Text(
                     text = review.date,
                     fontSize = 10.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = TextMuted
                 )
             }
-
             Spacer(modifier = Modifier.height(10.dp))
-
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RatingBadge(rating = review.rating)
-
-                Text(
-                    text = review.priceRange,
-                    fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
+                Text(text = review.priceRange, fontSize = 11.sp, color = TextPrimary)
                 Text(
                     text = "${review.recommendationPercent}% recomienda",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = TextPrimary
                 )
             }
-
             if (review.tags.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     review.tags.take(2).forEach { tag ->
                         QualityPill(text = tag)
@@ -421,27 +378,22 @@ private fun HistoryCard(review: ProfileReview) {
 private fun RatingBadge(rating: Float) {
     Row(
         modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(4.dp)
-            )
+            .background(PrimaryBlue, RoundedCornerShape(4.dp))
             .padding(horizontal = 7.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Filled.Star,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary,
+            tint = Color.White,
             modifier = Modifier.size(12.dp)
         )
-
         Spacer(modifier = Modifier.width(3.dp))
-
         Text(
             text = rating.toString(),
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = Color.White
         )
     }
 }
@@ -450,7 +402,7 @@ private fun RatingBadge(rating: Float) {
 private fun QualityPill(text: String) {
     Surface(
         shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = Color(0xFFF3F5F8)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),

@@ -29,9 +29,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +50,12 @@ import com.example.proyecto_final_seminario2.data.rating.models.HighlightedQuali
 import com.example.proyecto_final_seminario2.data.rating.models.RatingFormData
 import com.example.proyecto_final_seminario2.data.rating.models.WaitTimeOption
 import com.example.proyecto_final_seminario2.ui.theme.pressScaleClickable
+
+private val RatingBackground = LocalBackground
+private val PrimaryBlue = LocalPrimary
+private val TextPrimary = LocalTextPrimary
+private val TextMuted = LocalTextMuted
+private val BorderSoft = LocalBorder
 
 @Composable
 fun RatingFormScreen(
@@ -71,7 +76,7 @@ fun RatingFormScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = RatingBackground
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -83,21 +88,16 @@ fun RatingFormScreen(
             item { RatingTopBar(onBackClick = onBackClick) }
             item { BusinessHeader(business = business) }
             item { ResponsibleUseCard() }
-
             item {
                 SectionTitle(text = "Detalles de la visita")
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 CompactTextField(
                     value = paidPrice,
                     onValueChange = { paidPrice = it },
                     label = "Precio pagado o estimado",
                     placeholder = "Q 0.00"
                 )
-
                 Spacer(modifier = Modifier.height(10.dp))
-
                 CompactTextField(
                     value = visitDate,
                     onValueChange = { visitDate = it },
@@ -105,54 +105,43 @@ fun RatingFormScreen(
                     placeholder = "mm/dd/yyyy"
                 )
             }
-
             item {
                 SectionTitle(text = "Califica tu experiencia")
-
                 Spacer(modifier = Modifier.height(10.dp))
-
                 RatingSelector(
                     label = "Servicio",
                     value = serviceRating,
                     onValueChange = { serviceRating = it }
                 )
-
                 RatingSelector(
                     label = "Atencion",
                     value = attentionRating,
                     onValueChange = { attentionRating = it }
                 )
-
                 RatingSelector(
                     label = "Satisfaccion",
                     value = satisfactionRating,
                     onValueChange = { satisfactionRating = it }
                 )
             }
-
             item {
                 SectionTitle(text = "Tiempo de espera")
-
                 SegmentedOptions(
                     options = WaitTimeOption.values().toList(),
                     selectedOption = waitTime,
                     onOptionClick = { waitTime = it }
                 )
             }
-
             item {
                 SectionTitle(text = "¿Lo recomendarias?")
-
                 RecommendationOptions(
                     recommends = recommends,
                     onRecommendationClick = { recommends = it },
                     icons = true
                 )
             }
-
             item {
                 SectionTitle(text = "Cualidades a destacar")
-
                 QualityChips(
                     selectedQualities = selectedQualities,
                     onQualityClick = { quality ->
@@ -164,7 +153,6 @@ fun RatingFormScreen(
                     }
                 )
             }
-
             item {
                 Button(
                     onClick = {
@@ -183,10 +171,7 @@ fun RatingFormScreen(
                         )
                     },
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
+                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
@@ -196,15 +181,9 @@ fun RatingFormScreen(
                         contentDescription = null,
                         modifier = Modifier.size(16.dp)
                     )
-
                     Spacer(modifier = Modifier.width(8.dp))
-
-                    Text(
-                        text = "Enviar valoracion",
-                        fontSize = 13.sp
-                    )
+                    Text(text = "Enviar valoracion", fontSize = 13.sp)
                 }
-
                 Spacer(modifier = Modifier.height(18.dp))
             }
         }
@@ -220,18 +199,13 @@ private fun RatingTopBar(onBackClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBackClick) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground
-            )
+            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
         }
-
         Text(
             text = "Valorar",
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onBackground
+            color = TextPrimary
         )
     }
 }
@@ -243,13 +217,12 @@ private fun BusinessHeader(business: Business?) {
             text = business?.name ?: "Negocio no encontrado",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
+            color = TextPrimary
         )
-
         Text(
             text = business?.category?.label?.dropLastWhile { it == 's' } ?: "Servicio local",
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextMuted
         )
     }
 }
@@ -258,13 +231,8 @@ private fun BusinessHeader(business: Business?) {
 private fun ResponsibleUseCard() {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.tertiary
-        ),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF7D6)),
+        border = BorderStroke(1.dp, Color(0xFFFFE8A3)),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -274,24 +242,21 @@ private fun ResponsibleUseCard() {
             Icon(
                 imageVector = Icons.Filled.Info,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                tint = Color(0xFF8A5A00),
                 modifier = Modifier.size(16.dp)
             )
-
             Spacer(modifier = Modifier.width(8.dp))
-
             Column {
                 Text(
                     text = "Uso responsable",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                    color = Color(0xFF5F4200)
                 )
-
                 Text(
                     text = "Tu reseña debe ser honesta, objetiva y basada en tu experiencia real.",
                     fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                    color = Color(0xFF7A5A12)
                 )
             }
         }
@@ -304,7 +269,7 @@ private fun SectionTitle(text: String) {
         text = text,
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary
+        color = PrimaryBlue
     )
 }
 
@@ -316,32 +281,13 @@ private fun CompactTextField(
     placeholder: String
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(
-            text = label,
-            fontSize = 10.sp,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
+        Text(text = label, fontSize = 10.sp, color = TextPrimary)
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    fontSize = 12.sp
-                )
-            },
+            placeholder = { Text(text = placeholder, fontSize = 12.sp) },
             singleLine = true,
             shape = RoundedCornerShape(6.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                focusedContainerColor = MaterialTheme.colorScheme.surface,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                cursorColor = MaterialTheme.colorScheme.primary
-            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
@@ -356,20 +302,12 @@ private fun RatingSelector(
     onValueChange: (Int) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        Text(
-            text = label,
-            fontSize = 10.sp,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
+        Text(text = label, fontSize = 10.sp, color = TextPrimary)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(28.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(50)
-                ),
+                .background(Color.White, RoundedCornerShape(50)),
             horizontalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             (1..5).forEach { number ->
@@ -415,7 +353,6 @@ private fun RatingSelector(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(4.dp))
     }
 }
@@ -430,10 +367,7 @@ private fun SegmentedOptions(
         modifier = Modifier
             .fillMaxWidth()
             .height(34.dp)
-            .background(
-                color = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(50)
-            ),
+            .background(Color.White, RoundedCornerShape(50)),
         horizontalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         options.forEach { option ->
@@ -493,10 +427,7 @@ private fun RecommendationOptions(
         modifier = Modifier
             .fillMaxWidth()
             .height(34.dp)
-            .background(
-                color = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(50)
-            ),
+            .background(Color.White, RoundedCornerShape(50)),
         horizontalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         options.forEach { (option, label) ->
@@ -541,10 +472,8 @@ private fun RecommendationOptions(
                             tint = contentColor,
                             modifier = Modifier.size(13.dp)
                         )
-
                         Spacer(modifier = Modifier.width(4.dp))
                     }
-
                     Text(
                         text = label,
                         fontSize = 11.sp,
@@ -578,7 +507,6 @@ private fun QualityChips(
                         modifier = Modifier.weight(1f)
                     )
                 }
-
                 if (rowQualities.size == 1) {
                     Spacer(modifier = Modifier.weight(1f))
                 }
