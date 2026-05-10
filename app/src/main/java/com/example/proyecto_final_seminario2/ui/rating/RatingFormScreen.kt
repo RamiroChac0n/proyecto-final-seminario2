@@ -50,11 +50,6 @@ import com.example.proyecto_final_seminario2.data.explorer.models.Business
 import com.example.proyecto_final_seminario2.data.rating.models.HighlightedQuality
 import com.example.proyecto_final_seminario2.data.rating.models.RatingFormData
 import com.example.proyecto_final_seminario2.data.rating.models.WaitTimeOption
-import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
-import com.example.proyecto_final_seminario2.ui.theme.LocalBorder
-import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
-import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
-import com.example.proyecto_final_seminario2.ui.theme.LocalTextPrimary
 import com.example.proyecto_final_seminario2.ui.theme.pressScaleClickable
 
 @Composable
@@ -379,23 +374,36 @@ private fun RatingSelector(
         ) {
             (1..5).forEach { number ->
                 val selected = number <= value
+
                 val segmentColor by animateColorAsState(
-                    targetValue = if (selected) PrimaryBlue else Color.White,
+                    targetValue = if (selected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
                     label = "ratingSegmentColor"
                 )
+
                 val textColor by animateColorAsState(
-                    targetValue = if (selected) Color.White else TextPrimary,
+                    targetValue = if (selected) {
+                        MaterialTheme.colorScheme.onPrimary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
                     label = "ratingSegmentTextColor"
                 )
+
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .height(28.dp)
                         .background(
-D                            color = segmentColor,
+                            color = segmentColor,
                             shape = RoundedCornerShape(50)
                         )
-                        .pressScaleClickable(pressedScale = 0.96f) { onValueChange(number) },
+                        .pressScaleClickable(pressedScale = 0.96f) {
+                            onValueChange(number)
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -430,14 +438,25 @@ private fun SegmentedOptions(
     ) {
         options.forEach { option ->
             val selected = option == selectedOption
+
             val segmentColor by animateColorAsState(
-                targetValue = if (selected) PrimaryBlue else Color.White,
+                targetValue = if (selected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.surface
+                },
                 label = "waitSegmentColor"
             )
+
             val textColor by animateColorAsState(
-                targetValue = if (selected) Color.White else TextPrimary,
+                targetValue = if (selected) {
+                    MaterialTheme.colorScheme.onPrimary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
                 label = "waitSegmentTextColor"
             )
+
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -446,7 +465,9 @@ private fun SegmentedOptions(
                         color = segmentColor,
                         shape = RoundedCornerShape(50)
                     )
-                    .pressScaleClickable(pressedScale = 0.96f) { onOptionClick(option) },
+                    .pressScaleClickable(pressedScale = 0.96f) {
+                        onOptionClick(option)
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -480,14 +501,25 @@ private fun RecommendationOptions(
     ) {
         options.forEach { (option, label) ->
             val selected = option == recommends
+
             val segmentColor by animateColorAsState(
-                targetValue = if (selected) PrimaryBlue else Color.White,
+                targetValue = if (selected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.surface
+                },
                 label = "recommendSegmentColor"
             )
+
             val contentColor by animateColorAsState(
-                targetValue = if (selected) Color.White else TextPrimary,
+                targetValue = if (selected) {
+                    MaterialTheme.colorScheme.onPrimary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
                 label = "recommendSegmentContentColor"
             )
+
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -496,7 +528,9 @@ private fun RecommendationOptions(
                         color = segmentColor,
                         shape = RoundedCornerShape(50)
                     )
-                    .pressScaleClickable(pressedScale = 0.96f) { onRecommendationClick(option) },
+                    .pressScaleClickable(pressedScale = 0.96f) {
+                        onRecommendationClick(option)
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -561,15 +595,29 @@ private fun QualityChip(
     modifier: Modifier = Modifier
 ) {
     val chipColor by animateColorAsState(
-        targetValue = if (selected) PrimaryBlue else Color.White,
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.surface
+        },
         label = "qualityChipColor"
     )
+
     val borderColor by animateColorAsState(
-        targetValue = if (selected) PrimaryBlue else BorderSoft,
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.outline
+        },
         label = "qualityChipBorderColor"
     )
+
     val textColor by animateColorAsState(
-        targetValue = if (selected) Color.White else TextPrimary,
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.onPrimary
+        } else {
+            MaterialTheme.colorScheme.onSurface
+        },
         label = "qualityChipTextColor"
     )
 

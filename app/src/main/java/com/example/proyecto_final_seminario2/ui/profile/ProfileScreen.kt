@@ -28,8 +28,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -42,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,11 +49,6 @@ import coil.compose.AsyncImage
 import com.example.proyecto_final_seminario2.ui.explorer.components.ExplorerTopBar
 import com.example.proyecto_final_seminario2.ui.navigation.AppBottomBar
 import com.example.proyecto_final_seminario2.ui.navigation.AppTab
-import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
-import com.example.proyecto_final_seminario2.ui.theme.LocalBorder
-import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
-import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
-import com.example.proyecto_final_seminario2.ui.theme.LocalTextPrimary
 
 private const val MockAvatarUrl =
     "https://api.dicebear.com/9.x/lorelei/png?seed=tito%40ejemplo.com&size=128"
@@ -142,8 +136,11 @@ fun ProfileScreen(
                     onClearClick = { historyReviews = emptyList() }
                 )
             }
+
             if (historyReviews.isEmpty()) {
-                item { EmptyHistoryCard() }
+                item {
+                    EmptyHistoryCard()
+                }
             } else {
                 items(historyReviews) { review ->
                     HistoryCard(review = review)
@@ -170,23 +167,39 @@ private fun HistoryHeader(
             text = "Historial",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.weight(1f)
         )
+
         OutlinedButton(
             onClick = onClearClick,
             enabled = canClear,
             shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFD92D20)),
-            border = BorderStroke(1.dp, if (canClear) Color(0xFFD92D20) else BorderSoft)
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.error,
+                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            border = BorderStroke(
+                width = 1.dp,
+                color = if (canClear) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.outline
+                }
+            )
         ) {
             Icon(
                 imageVector = Icons.Filled.DeleteOutline,
                 contentDescription = null,
                 modifier = Modifier.size(14.dp)
             )
+
             Spacer(modifier = Modifier.width(6.dp))
-            Text(text = "Borrar", fontSize = 12.sp)
+
+            Text(
+                text = "Borrar",
+                fontSize = 12.sp
+            )
         }
     }
 }
@@ -195,8 +208,13 @@ private fun HistoryHeader(
 private fun EmptyHistoryCard() {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = BorderStroke(1.dp, BorderSoft),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outline
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize()
@@ -204,7 +222,7 @@ private fun EmptyHistoryCard() {
         Text(
             text = "No hay valoraciones en el historial.",
             fontSize = 13.sp,
-            color = TextMuted,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -435,20 +453,23 @@ private fun QualityPill(text: String) {
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = qualityIcon(text),
                 contentDescription = null,
-                tint = TextMuted,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(12.dp)
             )
+
             Spacer(modifier = Modifier.width(4.dp))
+
             Text(
                 text = text.uppercase(),
                 fontSize = 10.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = TextMuted
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -456,6 +477,7 @@ private fun QualityPill(text: String) {
 
 private fun qualityIcon(tag: String): ImageVector {
     val normalized = tag.lowercase()
+
     return when {
         "precio" in normalized -> Icons.Filled.AttachMoney
         "puntual" in normalized || "rapida" in normalized || "rapido" in normalized -> Icons.Filled.AccessTime

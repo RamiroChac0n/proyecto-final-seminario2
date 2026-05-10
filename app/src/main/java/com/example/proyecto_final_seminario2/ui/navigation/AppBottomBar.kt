@@ -4,16 +4,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
-import com.example.proyecto_final_seminario2.ui.theme.LocalPrimarySoft
-import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
 
 enum class AppTab {
     Explore,
@@ -27,7 +24,7 @@ fun AppBottomBar(
     onProfileClick: () -> Unit
 ) {
     NavigationBar(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 3.dp
     ) {
         NavigationBarItem(
@@ -39,9 +36,12 @@ fun AppBottomBar(
                     contentDescription = "Ir a explorar"
                 )
             },
-            label = { Text(text = "Explorar") },
+            label = {
+                Text(text = "Explorar")
+            },
             colors = bottomBarItemColors()
         )
+
         NavigationBarItem(
             selected = selectedTab == AppTab.Profile,
             onClick = onProfileClick,
@@ -51,7 +51,9 @@ fun AppBottomBar(
                     contentDescription = "Ir a perfil"
                 )
             },
-            label = { Text(text = "Perfil") },
+            label = {
+                Text(text = "Perfil")
+            },
             colors = bottomBarItemColors()
         )
     }
@@ -59,9 +61,9 @@ fun AppBottomBar(
 
 @Composable
 private fun bottomBarItemColors() = NavigationBarItemDefaults.colors(
-    selectedIconColor = LocalPrimary,
-    selectedTextColor = LocalPrimary,
-    indicatorColor = LocalPrimarySoft,
-    unselectedIconColor = LocalTextMuted,
-    unselectedTextColor = LocalTextMuted
+    selectedIconColor = MaterialTheme.colorScheme.primary,
+    selectedTextColor = MaterialTheme.colorScheme.primary,
+    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
 )
