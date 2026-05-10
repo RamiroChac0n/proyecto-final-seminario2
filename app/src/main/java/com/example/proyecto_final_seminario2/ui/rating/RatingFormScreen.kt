@@ -1,8 +1,9 @@
 package com.example.proyecto_final_seminario2.ui.rating
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,12 @@ import com.example.proyecto_final_seminario2.data.explorer.models.Business
 import com.example.proyecto_final_seminario2.data.rating.models.HighlightedQuality
 import com.example.proyecto_final_seminario2.data.rating.models.RatingFormData
 import com.example.proyecto_final_seminario2.data.rating.models.WaitTimeOption
+import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
+import com.example.proyecto_final_seminario2.ui.theme.LocalBorder
+import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
+import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
+import com.example.proyecto_final_seminario2.ui.theme.LocalTextPrimary
+import com.example.proyecto_final_seminario2.ui.theme.pressScaleClickable
 
 @Composable
 fun RatingFormScreen(
@@ -372,31 +379,30 @@ private fun RatingSelector(
         ) {
             (1..5).forEach { number ->
                 val selected = number <= value
-
+                val segmentColor by animateColorAsState(
+                    targetValue = if (selected) PrimaryBlue else Color.White,
+                    label = "ratingSegmentColor"
+                )
+                val textColor by animateColorAsState(
+                    targetValue = if (selected) Color.White else TextPrimary,
+                    label = "ratingSegmentTextColor"
+                )
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .height(28.dp)
                         .background(
-                            color = if (selected) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.surface
-                            },
+D                            color = segmentColor,
                             shape = RoundedCornerShape(50)
                         )
-                        .clickable { onValueChange(number) },
+                        .pressScaleClickable(pressedScale = 0.96f) { onValueChange(number) },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = number.toString(),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (selected) {
-                            MaterialTheme.colorScheme.onPrimary
-                        } else {
-                            MaterialTheme.colorScheme.onSurface
-                        }
+                        color = textColor
                     )
                 }
             }
@@ -424,31 +430,30 @@ private fun SegmentedOptions(
     ) {
         options.forEach { option ->
             val selected = option == selectedOption
-
+            val segmentColor by animateColorAsState(
+                targetValue = if (selected) PrimaryBlue else Color.White,
+                label = "waitSegmentColor"
+            )
+            val textColor by animateColorAsState(
+                targetValue = if (selected) Color.White else TextPrimary,
+                label = "waitSegmentTextColor"
+            )
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .height(34.dp)
                     .background(
-                        color = if (selected) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.surface
-                        },
+                        color = segmentColor,
                         shape = RoundedCornerShape(50)
                     )
-                    .clickable { onOptionClick(option) },
+                    .pressScaleClickable(pressedScale = 0.96f) { onOptionClick(option) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = option.label,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (selected) {
-                        MaterialTheme.colorScheme.onPrimary
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    }
+                    color = textColor
                 )
             }
         }
@@ -475,20 +480,23 @@ private fun RecommendationOptions(
     ) {
         options.forEach { (option, label) ->
             val selected = option == recommends
-
+            val segmentColor by animateColorAsState(
+                targetValue = if (selected) PrimaryBlue else Color.White,
+                label = "recommendSegmentColor"
+            )
+            val contentColor by animateColorAsState(
+                targetValue = if (selected) Color.White else TextPrimary,
+                label = "recommendSegmentContentColor"
+            )
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .height(34.dp)
                     .background(
-                        color = if (selected) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.surface
-                        },
+                        color = segmentColor,
                         shape = RoundedCornerShape(50)
                     )
-                    .clickable { onRecommendationClick(option) },
+                    .pressScaleClickable(pressedScale = 0.96f) { onRecommendationClick(option) },
                 contentAlignment = Alignment.Center
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -496,11 +504,7 @@ private fun RecommendationOptions(
                         Icon(
                             imageVector = if (option) Icons.Filled.Check else Icons.Filled.Close,
                             contentDescription = null,
-                            tint = if (selected) {
-                                MaterialTheme.colorScheme.onPrimary
-                            } else {
-                                MaterialTheme.colorScheme.onSurface
-                            },
+                            tint = contentColor,
                             modifier = Modifier.size(13.dp)
                         )
 
@@ -511,11 +515,7 @@ private fun RecommendationOptions(
                         text = label,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (selected) {
-                            MaterialTheme.colorScheme.onPrimary
-                        } else {
-                            MaterialTheme.colorScheme.onSurface
-                        }
+                        color = contentColor
                     )
                 }
             }
@@ -560,22 +560,26 @@ private fun QualityChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val chipColor by animateColorAsState(
+        targetValue = if (selected) PrimaryBlue else Color.White,
+        label = "qualityChipColor"
+    )
+    val borderColor by animateColorAsState(
+        targetValue = if (selected) PrimaryBlue else BorderSoft,
+        label = "qualityChipBorderColor"
+    )
+    val textColor by animateColorAsState(
+        targetValue = if (selected) Color.White else TextPrimary,
+        label = "qualityChipTextColor"
+    )
+
     Surface(
         shape = RoundedCornerShape(50),
-        color = if (selected) {
-            MaterialTheme.colorScheme.primary
-        } else {
-            MaterialTheme.colorScheme.surface
-        },
-        border = BorderStroke(
-            width = 1.dp,
-            color = if (selected) {
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.outline
-            }
-        ),
-        modifier = modifier.clickable(onClick = onClick)
+        color = chipColor,
+        border = BorderStroke(1.dp, borderColor),
+        modifier = modifier
+            .pressScaleClickable(pressedScale = 0.96f, onClick = onClick)
+            .animateContentSize()
     ) {
         Box(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
@@ -585,11 +589,7 @@ private fun QualityChip(
                 text = text,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = if (selected) {
-                    MaterialTheme.colorScheme.onPrimary
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                }
+                color = textColor
             )
         }
     }

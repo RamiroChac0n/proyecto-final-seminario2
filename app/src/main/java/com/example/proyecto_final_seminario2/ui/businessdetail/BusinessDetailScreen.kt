@@ -1,6 +1,7 @@
 package com.example.proyecto_final_seminario2.ui.businessdetail
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,6 +47,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
+import com.example.proyecto_final_seminario2.ui.theme.LocalBackground
+import com.example.proyecto_final_seminario2.ui.theme.LocalBorder
+import com.example.proyecto_final_seminario2.ui.theme.LocalPrimary
+import com.example.proyecto_final_seminario2.ui.theme.LocalTextMuted
+import com.example.proyecto_final_seminario2.ui.theme.LocalTextPrimary
 
 @Composable
 fun BusinessDetailScreen(
@@ -133,6 +139,7 @@ private fun DetailHero(business: Business) {
             .fillMaxWidth()
             .aspectRatio(1.7f)
             .clip(RoundedCornerShape(2.dp))
+            .animateContentSize()
     ) {
         AsyncImage(
             model = business.imageUrl,
@@ -253,7 +260,9 @@ private fun MetricCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.height(88.dp),
+        modifier = modifier
+            .height(88.dp)
+            .animateContentSize(),
         shape = RoundedCornerShape(6.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -311,7 +320,9 @@ private fun RecommendationCard(business: Business) {
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -383,7 +394,7 @@ private fun HighlightedQualities(tags: List<String>) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Star,
+                            imageVector = qualityIcon(tag),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(12.dp)
@@ -400,6 +411,15 @@ private fun HighlightedQualities(tags: List<String>) {
                 }
             }
         }
+    }
+}
+
+private fun qualityIcon(tag: String): ImageVector {
+    val normalized = tag.lowercase()
+    return when {
+        "precio" in normalized -> Icons.Filled.AttachMoney
+        "puntual" in normalized || "rapida" in normalized || "rapido" in normalized -> Icons.Filled.AccessTime
+        else -> Icons.Filled.Star
     }
 }
 
