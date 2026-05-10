@@ -1,5 +1,4 @@
 package com.example.proyecto_final_seminario2.ui.register
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -28,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -59,14 +58,12 @@ private val FieldSpacing = 24.dp
 private val LogoImageSize = 96.dp
 private val FormCornerRadius = 4.dp
 private val ActionCornerRadius = 50.dp
-
 data class RegistrationState(
     val name: String = "",
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = ""
 )
-
 @Composable
 fun RegistrationRoute(
     onBackToLoginClick: () -> Unit,
@@ -74,7 +71,6 @@ fun RegistrationRoute(
 ) {
     val vm: RegisterViewModel = viewModel()
     val uiState by vm.uiState.collectAsState()
-
     RegistrationScreen(
         state = RegistrationState(
             name = uiState.name,
@@ -93,7 +89,6 @@ fun RegistrationRoute(
         modifier = modifier
     )
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
@@ -111,17 +106,16 @@ fun RegistrationScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(BackgroundColor)
             .padding(horizontal = ScreenHorizontalPadding, vertical = ScreenVerticalPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         Spacer(modifier = Modifier.height(LogoTopSpacing))
-
         Box(
             modifier = Modifier
                 .size(LogoSize)
-                .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
+                .background(LogoBackgroundColor, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -131,178 +125,160 @@ fun RegistrationScreen(
                 contentScale = ContentScale.Fit
             )
         }
-
         Spacer(modifier = Modifier.height(SubtitleTopSpacing))
-
         Text(
             text = "Crear cuenta",
             fontSize = 28.sp,
             fontWeight = FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onBackground
+            color = TextPrimaryColor
         )
-
         Spacer(modifier = Modifier.height(SubtitleTopSpacing))
-
         Text(
             text = "Únete a la comunidad y comienza a explorar negocios locales.",
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TextSecondaryColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
-
         Spacer(modifier = Modifier.height(HeaderSpacing))
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(FieldSpacing)
         ) {
-            RegistrationTextField(
+             OutlinedTextField(
                 value = state.name,
                 onValueChange = onNameChange,
-                label = "Nombre",
-                placeholder = "Tu nombre completo",
-                enabled = !isLoading
+                label = { Text("Nombre") },
+                placeholder = { Text("Tu nombre completo") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(FieldHeight),
+                shape = RoundedCornerShape(FormCornerRadius),
+                singleLine = true,
+                enabled = !isLoading,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PrimaryColor,
+                    unfocusedBorderColor = BorderColor,
+                    focusedLabelColor = TextSecondaryColor,
+                    unfocusedLabelColor = TextSecondaryColor,
+                    focusedContainerColor = BackgroundColor,
+                    unfocusedContainerColor = BackgroundColor,
+                    focusedTextColor = TextPrimaryColor,
+                    unfocusedTextColor = TextPrimaryColor
+                )
             )
-
-            RegistrationTextField(
+            OutlinedTextField(
                 value = state.email,
                 onValueChange = onEmailChange,
-                label = "Correo electrónico",
-                placeholder = "ejemplo@correo.com",
-                enabled = !isLoading
+                label = { Text("Correo electrónico") },
+                placeholder = { Text("ejemplo@correo.com") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(FieldHeight),
+                shape = RoundedCornerShape(FormCornerRadius),
+                singleLine = true,
+                enabled = !isLoading,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PrimaryColor,
+                    unfocusedBorderColor = BorderColor,
+                    focusedLabelColor = TextSecondaryColor,
+                    unfocusedLabelColor = TextSecondaryColor,
+                    focusedContainerColor = BackgroundColor,
+                    unfocusedContainerColor = BackgroundColor,
+                    focusedTextColor = TextPrimaryColor,
+                    unfocusedTextColor = TextPrimaryColor
+                )
             )
-
-            RegistrationTextField(
+            OutlinedTextField(
                 value = state.password,
                 onValueChange = onPasswordChange,
-                label = "Contraseña",
-                placeholder = "••••••••",
+                label = { Text("Contraseña") },
+                placeholder = { Text("••••••••") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(FieldHeight),
+                shape = RoundedCornerShape(FormCornerRadius),
+                singleLine = true,
                 enabled = !isLoading,
-                isPassword = true
+                visualTransformation = PasswordVisualTransformation(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PrimaryColor,
+                    unfocusedBorderColor = BorderColor,
+                    focusedLabelColor = TextSecondaryColor,
+                    unfocusedLabelColor = TextSecondaryColor,
+                    focusedContainerColor = BackgroundColor,
+                    unfocusedContainerColor = BackgroundColor,
+                    focusedTextColor = TextPrimaryColor,
+                    unfocusedTextColor = TextPrimaryColor
+                )
             )
-
-            RegistrationTextField(
+            OutlinedTextField(
                 value = state.confirmPassword,
                 onValueChange = onConfirmPasswordChange,
-                label = "Confirmar contraseña",
-                placeholder = "••••••••",
+                label = { Text("Confirmar contraseña") },
+                placeholder = { Text("••••••••") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(FieldHeight),
+                shape = RoundedCornerShape(FormCornerRadius),
+                singleLine = true,
                 enabled = !isLoading,
-                isPassword = true
+                visualTransformation = PasswordVisualTransformation(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PrimaryColor,
+                    unfocusedBorderColor = BorderColor,
+                    focusedLabelColor = TextSecondaryColor,
+                    unfocusedLabelColor = TextSecondaryColor,
+                    focusedContainerColor = BackgroundColor,
+                    unfocusedContainerColor = BackgroundColor,
+                    focusedTextColor = TextPrimaryColor,
+                    unfocusedTextColor = TextPrimaryColor
+                )
             )
-
             if (errorMessage != null) {
                 Text(
                     text = errorMessage,
-                    color = MaterialTheme.colorScheme.error,
+                    color = Color.Red,
                     fontSize = 12.sp,
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }
-
             Button(
                 onClick = onCreateAccountClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(ButtonHeight),
                 shape = RoundedCornerShape(ActionCornerRadius),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
+                colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor),
                 enabled = !isLoading
             ) {
                 Text(
                     text = "Crear cuenta",
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
                 )
             }
-
             TextButton(
                 onClick = onBackToLoginClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(ButtonHeight),
                 shape = RoundedCornerShape(ActionCornerRadius),
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.primary,
-                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
+                colors = ButtonDefaults.textButtonColors(contentColor = PrimaryColor),
                 contentPadding = PaddingValues(0.dp),
                 enabled = !isLoading
             ) {
                 Text(
                     text = "Ya tengo cuenta",
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = PrimaryColor
                 )
             }
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RegistrationTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    placeholder: String,
-    enabled: Boolean,
-    isPassword: Boolean = false
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = {
-            Text(text = label)
-        },
-        placeholder = {
-            Text(text = placeholder)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(FieldHeight),
-        shape = RoundedCornerShape(FormCornerRadius),
-        singleLine = true,
-        enabled = enabled,
-        visualTransformation = if (isPassword) {
-            PasswordVisualTransformation()
-        } else {
-            androidx.compose.ui.text.input.VisualTransformation.None
-        },
-        colors = registrationTextFieldColors()
-    )
-}
-
-@Composable
-private fun registrationTextFieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = MaterialTheme.colorScheme.primary,
-    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-    disabledBorderColor = MaterialTheme.colorScheme.outline,
-
-    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-
-    focusedContainerColor = MaterialTheme.colorScheme.surface,
-    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-    disabledContainerColor = MaterialTheme.colorScheme.surface,
-
-    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-    disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-
-    focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-
-    cursorColor = MaterialTheme.colorScheme.primary
-)
-
 @Preview(showBackground = true, widthDp = 390, heightDp = 884)
 @Composable
 fun RegistrationScreenPreview() {
