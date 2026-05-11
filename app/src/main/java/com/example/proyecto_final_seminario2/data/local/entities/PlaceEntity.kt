@@ -31,6 +31,21 @@ data class PlaceEntity(
     @ColumnInfo(name = "longitude")
     val longitude: Double?,
 
+    @ColumnInfo(name = "user_rating_count")
+    val userRatingCount: Int? = null,
+
+    @ColumnInfo(name = "phone_number")
+    val phoneNumber: String? = null,
+
+    @ColumnInfo(name = "website_uri")
+    val websiteUri: String? = null,
+
+    @ColumnInfo(name = "google_maps_uri")
+    val googleMapsUri: String? = null,
+
+    @ColumnInfo(name = "opening_hours")
+    val openingHours: String? = null,
+
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long = System.currentTimeMillis()
 )

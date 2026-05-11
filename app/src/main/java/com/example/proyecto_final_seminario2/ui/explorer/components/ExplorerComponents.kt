@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposableOpenTarget
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
@@ -52,7 +52,8 @@ import com.example.proyecto_final_seminario2.data.explorer.models.Business
 @Composable
 fun ExplorerTopBar(
     title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    actions: @Composable () -> Unit = {}
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -63,7 +64,7 @@ fun ExplorerTopBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(horizontal = 10.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -76,8 +77,11 @@ fun ExplorerTopBar(
                 Text(
                     text = title,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f)
                 )
+
+                actions()
             }
 
             Divider(
@@ -132,7 +136,9 @@ fun CategoryChips(
 
             FilterChip(
                 selected = selected,
-                onClick = { onSelected(index) },
+                onClick = {
+                    onSelected(index)
+                },
                 label = {
                     Text(
                         text = label,
@@ -224,7 +230,9 @@ fun BusinessCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick(item) },
+            .clickable {
+                onClick(item)
+            },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
