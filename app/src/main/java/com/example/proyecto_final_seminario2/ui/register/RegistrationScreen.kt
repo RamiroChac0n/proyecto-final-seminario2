@@ -20,21 +20,26 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyecto_final_seminario2.R
 import com.example.proyecto_final_seminario2.ui.theme.Proyectofinalseminario2Theme
@@ -62,10 +67,15 @@ data class RegistrationState(
 @Composable
 fun RegistrationRoute(
     onBackToLoginClick: () -> Unit,
+    onRegisterSuccess: () -> Unit,
+    viewModelFactory: ViewModelProvider.Factory,
     modifier: Modifier = Modifier
 ) {
-    val vm: RegisterViewModel = viewModel()
-    val uiState by vm.uiState.collectAsState()
+    val viewModel: RegisterViewModel = viewModel(
+        factory = viewModelFactory
+    )
+
+    val uiState by viewModel.uiState.collectAsState()
 
     RegistrationScreen(
         state = RegistrationState(
@@ -74,11 +84,15 @@ fun RegistrationRoute(
             password = uiState.password,
             confirmPassword = uiState.confirmPassword
         ),
-        onNameChange = vm::onNameChange,
-        onEmailChange = vm::onEmailChange,
-        onPasswordChange = vm::onPasswordChange,
-        onConfirmPasswordChange = vm::onConfirmPasswordChange,
-        onCreateAccountClick = vm::onCreateAccountClick,
+        onNameChange = viewModel::onNameChange,
+        onEmailChange = viewModel::onEmailChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
+        onCreateAccountClick = {
+            viewModel.onCreateAccountClick(
+                onSuccess = onRegisterSuccess
+            )
+        },
         isLoading = uiState.isLoading,
         errorMessage = uiState.errorMessage,
         onBackToLoginClick = onBackToLoginClick,
@@ -86,7 +100,6 @@ fun RegistrationRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
     state: RegistrationState,
@@ -207,7 +220,7 @@ fun RegistrationScreen(
                 enabled = !isLoading
             ) {
                 Text(
-                    text = "Crear cuenta",
+                    text = if (isLoading) "Creando cuenta..." else "Crear cuenta",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -264,7 +277,7 @@ private fun RegistrationTextField(
         visualTransformation = if (isPassword) {
             PasswordVisualTransformation()
         } else {
-            androidx.compose.ui.text.input.VisualTransformation.None
+            VisualTransformation.None
         },
         colors = registrationTextFieldColors()
     )
