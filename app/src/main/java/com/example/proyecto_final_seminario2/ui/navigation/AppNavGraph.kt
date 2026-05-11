@@ -142,7 +142,8 @@ fun AppNavGraph(
                         navController.navigate(
                             "${AppDestination.RatingForm}/${Uri.encode(businessId)}"
                         )
-                    }
+                    },
+                    viewModelFactory = viewModelFactory
                 )
             }
 

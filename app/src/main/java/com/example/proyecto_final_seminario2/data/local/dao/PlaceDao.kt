@@ -12,6 +12,9 @@ interface PlaceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertPlaces(places: List<PlaceEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertPlace(place: PlaceEntity)
+
     @Query("SELECT * FROM places ORDER BY updated_at DESC")
     suspend fun getAllPlaces(): List<PlaceEntity>
 

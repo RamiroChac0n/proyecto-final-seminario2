@@ -10,7 +10,9 @@ import com.example.proyecto_final_seminario2.data.local.AppDatabase
 import com.example.proyecto_final_seminario2.data.location.repositories.AndroidLocationRepository
 import com.example.proyecto_final_seminario2.data.location.repositories.LocationRepository
 import com.example.proyecto_final_seminario2.data.places.remote.GooglePlacesDataSource
+import com.example.proyecto_final_seminario2.data.places.repositories.GooglePlaceDetailsRepository
 import com.example.proyecto_final_seminario2.data.places.repositories.GooglePlacesRepository
+import com.example.proyecto_final_seminario2.data.places.repositories.PlaceDetailsRepository
 import com.example.proyecto_final_seminario2.data.places.repositories.PlacesRepository
 import com.google.android.gms.location.LocationServices
 import com.google.android.libraries.places.api.Places
@@ -32,15 +34,22 @@ class AppContainer(context: Context) {
 
     private val placesClient: PlacesClient? = createPlacesClient()
 
+    private val googlePlacesDataSource = GooglePlacesDataSource(
+        placesClient = placesClient
+    )
+
     val locationRepository: LocationRepository = AndroidLocationRepository(
         context = appContext,
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(appContext)
     )
 
     val placesRepository: PlacesRepository = GooglePlacesRepository(
-        remoteDataSource = GooglePlacesDataSource(
-            placesClient = placesClient
-        ),
+        remoteDataSource = googlePlacesDataSource,
+        placeDao = database.placeDao()
+    )
+
+    val placeDetailsRepository: PlaceDetailsRepository = GooglePlaceDetailsRepository(
+        remoteDataSource = googlePlacesDataSource,
         placeDao = database.placeDao()
     )
 
