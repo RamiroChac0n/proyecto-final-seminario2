@@ -23,6 +23,7 @@ fun LoginRoute(
 
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
+            viewModel.clearSuccess()
             onLoginSuccess()
         }
     }

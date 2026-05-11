@@ -9,8 +9,20 @@ data class RatingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
+    @ColumnInfo(name = "user_id")
+    val userId: Int,
+
     @ColumnInfo(name = "business_id")
     val businessId: String,
+
+    @ColumnInfo(name = "place_name")
+    val placeName: String?,
+
+    @ColumnInfo(name = "place_category")
+    val placeCategory: String?,
+
+    @ColumnInfo(name = "place_address")
+    val placeAddress: String?,
 
     @ColumnInfo(name = "paid_price")
     val paidPrice: String,

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
 import com.example.proyecto_final_seminario2.data.explorer.models.BusinessCategory
 import com.example.proyecto_final_seminario2.data.places.models.SearchRadiusOption
+import com.example.proyecto_final_seminario2.ui.common.AppTopBar
 import com.example.proyecto_final_seminario2.ui.explorer.components.BusinessList
 import com.example.proyecto_final_seminario2.ui.explorer.components.CategoryChips
 import com.example.proyecto_final_seminario2.ui.explorer.components.ExplorerHeader
@@ -81,7 +82,7 @@ fun ExplorerScreen(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            ExplorerTopBar(
+            AppTopBar(
                 title = "Punto Local",
                 actions = {
                     IconButton(

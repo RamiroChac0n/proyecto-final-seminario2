@@ -48,6 +48,14 @@ fun AppNavGraph(
         AppViewModelFactory(appContainer)
     }
 
+    val startDestination = remember(appContainer) {
+        if (appContainer.userSessionManager.isLoggedIn()) {
+            AppDestination.Explorer
+        } else {
+            AppDestination.Login
+        }
+    }
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -55,7 +63,7 @@ fun AppNavGraph(
     ) { scaffoldPadding ->
         NavHost(
             navController = navController,
-            startDestination = AppDestination.Login,
+            startDestination = startDestination,
             modifier = modifier
                 .fillMaxSize()
                 .padding(scaffoldPadding)
@@ -115,13 +123,14 @@ fun AppNavGraph(
                             }
                         }
                     },
-                    onLogoutClick = {
+                    onLogoutComplete = {
                         navController.navigate(AppDestination.Login) {
-                            popUpTo(AppDestination.Explorer) {
+                            popUpTo(0) {
                                 inclusive = true
                             }
                         }
-                    }
+                    },
+                    viewModelFactory = viewModelFactory
                 )
             }
 

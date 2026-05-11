@@ -6,6 +6,7 @@ import com.example.proyecto_final_seminario2.data.auth.repositories.LoginReposit
 import com.example.proyecto_final_seminario2.data.auth.repositories.RegisterRepository
 import com.example.proyecto_final_seminario2.data.auth.repositories.RoomLoginRepository
 import com.example.proyecto_final_seminario2.data.auth.repositories.RoomRegisterRepository
+import com.example.proyecto_final_seminario2.data.auth.session.UserSessionManager
 import com.example.proyecto_final_seminario2.data.local.AppDatabase
 import com.example.proyecto_final_seminario2.data.location.repositories.AndroidLocationRepository
 import com.example.proyecto_final_seminario2.data.location.repositories.LocationRepository
@@ -14,6 +15,8 @@ import com.example.proyecto_final_seminario2.data.places.repositories.GooglePlac
 import com.example.proyecto_final_seminario2.data.places.repositories.GooglePlacesRepository
 import com.example.proyecto_final_seminario2.data.places.repositories.PlaceDetailsRepository
 import com.example.proyecto_final_seminario2.data.places.repositories.PlacesRepository
+import com.example.proyecto_final_seminario2.data.profile.repositories.ProfileRepository
+import com.example.proyecto_final_seminario2.data.profile.repositories.RoomProfileRepository
 import com.example.proyecto_final_seminario2.data.rating.repositories.RatingRepository
 import com.example.proyecto_final_seminario2.data.rating.repositories.RoomRatingRepository
 import com.google.android.gms.location.LocationServices
@@ -26,8 +29,11 @@ class AppContainer(context: Context) {
 
     private val database: AppDatabase = AppDatabase.getDatabase(appContext)
 
+    val userSessionManager: UserSessionManager = UserSessionManager(appContext)
+
     val loginRepository: LoginRepository = RoomLoginRepository(
-        userDao = database.userDao()
+        userDao = database.userDao(),
+        userSessionManager = userSessionManager
     )
 
     val registerRepository: RegisterRepository = RoomRegisterRepository(
@@ -56,13 +62,21 @@ class AppContainer(context: Context) {
     )
 
     val ratingRepository: RatingRepository = RoomRatingRepository(
-        ratingDao = database.ratingDao()
+        ratingDao = database.ratingDao(),
+        placeDao = database.placeDao(),
+        userSessionManager = userSessionManager
+    )
+
+    val profileRepository: ProfileRepository = RoomProfileRepository(
+        userDao = database.userDao(),
+        ratingDao = database.ratingDao(),
+        userSessionManager = userSessionManager
     )
 
     private fun createPlacesClient(): PlacesClient? {
         val apiKey = BuildConfig.PLACES_API_KEY
 
-        if (apiKey.isBlank()) {
+        if (apiKey.isBlank() || apiKey == "DEFAULT_API_KEY") {
             return null
         }
 

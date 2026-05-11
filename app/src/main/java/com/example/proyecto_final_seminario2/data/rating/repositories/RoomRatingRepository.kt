@@ -1,5 +1,7 @@
 package com.example.proyecto_final_seminario2.data.rating.repositories
 
+import com.example.proyecto_final_seminario2.data.auth.session.UserSessionManager
+import com.example.proyecto_final_seminario2.data.local.dao.PlaceDao
 import com.example.proyecto_final_seminario2.data.local.dao.RatingDao
 import com.example.proyecto_final_seminario2.data.local.entities.RatingEntity
 import com.example.proyecto_final_seminario2.data.rating.models.HighlightedQuality
@@ -8,15 +10,26 @@ import com.example.proyecto_final_seminario2.data.rating.models.RatingFormData
 import com.example.proyecto_final_seminario2.data.rating.models.WaitTimeOption
 
 class RoomRatingRepository(
-    private val ratingDao: RatingDao
+    private val ratingDao: RatingDao,
+    private val placeDao: PlaceDao,
+    private val userSessionManager: UserSessionManager
 ) : RatingRepository {
 
     override suspend fun saveRating(
         ratingFormData: RatingFormData
     ): Result<Unit> {
         return try {
+            val currentUser = userSessionManager.getCurrentUser()
+                ?: return Result.failure(Exception("Debes iniciar sesión para guardar una valoración"))
+
+            val place = placeDao.getPlaceById(ratingFormData.businessId)
+
             val entity = RatingEntity(
+                userId = currentUser.id,
                 businessId = ratingFormData.businessId,
+                placeName = place?.name,
+                placeCategory = place?.category,
+                placeAddress = place?.address,
                 paidPrice = ratingFormData.paidPrice,
                 visitDate = ratingFormData.visitDate,
                 serviceRating = ratingFormData.serviceRating,

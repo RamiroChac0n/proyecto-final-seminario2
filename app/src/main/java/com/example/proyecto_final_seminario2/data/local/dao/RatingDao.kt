@@ -23,6 +23,15 @@ interface RatingDao {
     @Query(
         """
         SELECT * FROM ratings
+        WHERE user_id = :userId
+        ORDER BY created_at DESC
+        """
+    )
+    suspend fun getRatingsByUserId(userId: Int): List<RatingEntity>
+
+    @Query(
+        """
+        SELECT * FROM ratings
         ORDER BY created_at DESC
         """
     )
