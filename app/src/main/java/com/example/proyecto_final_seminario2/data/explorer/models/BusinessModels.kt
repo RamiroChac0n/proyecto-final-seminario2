@@ -15,7 +15,8 @@ data class Business(
     val distance: String,
     val rating: Float,
     val recommendationPercent: Int,
-    val imageUrl: String,
-    val tags: List<String>
+    val imageUrl: String?,
+    val tags: List<String>,
+    val placeId: String = id,
+    val address: String? = null
 )
-

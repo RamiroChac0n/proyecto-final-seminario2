@@ -1,5 +1,6 @@
 package com.example.proyecto_final_seminario2.ui.explorer.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
@@ -38,13 +41,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
 
 @Composable
-fun ExplorerTopBar(title: String, modifier: Modifier = Modifier) {
+fun ExplorerTopBar(
+    title: String,
+    modifier: Modifier = Modifier
+) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface,
@@ -146,6 +155,7 @@ fun CategoryChips(
 fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
+    onSearchSubmit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -176,6 +186,15 @@ fun SearchBar(
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onSearchSubmit()
+                    }
+                ),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -214,13 +233,11 @@ fun BusinessCard(
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                AsyncImage(
-                    model = item.imageUrl,
-                    contentDescription = null,
+                BusinessImage(
+                    item = item,
                     modifier = Modifier
                         .size(80.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                        .clip(RoundedCornerShape(8.dp))
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -239,6 +256,15 @@ fun BusinessCard(
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
+                    if (!item.address.isNullOrBlank()) {
+                        Text(
+                            text = item.address,
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Row(
@@ -256,7 +282,7 @@ fun BusinessCard(
                             Spacer(modifier = Modifier.width(4.dp))
 
                             Text(
-                                text = "${item.rating}",
+                                text = if (item.rating > 0f) item.rating.toString() else "N/D",
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -267,7 +293,11 @@ fun BusinessCard(
                             color = MaterialTheme.colorScheme.secondaryContainer
                         ) {
                             Text(
-                                text = " ${item.recommendationPercent}% recomienda ",
+                                text = if (item.recommendationPercent > 0) {
+                                    " ${item.recommendationPercent}% recomienda "
+                                } else {
+                                    " Sin valoraciones "
+                                },
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -303,6 +333,69 @@ fun BusinessCard(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun BusinessImage(
+    item: Business,
+    modifier: Modifier = Modifier
+) {
+    val initial = item.name
+        .trim()
+        .firstOrNull()
+        ?.uppercaseChar()
+        ?.toString()
+        ?: "?"
+
+    if (item.imageUrl.isNullOrBlank()) {
+        PlaceInitialPlaceholder(
+            initial = initial,
+            modifier = modifier
+        )
+        return
+    }
+
+    SubcomposeAsyncImage(
+        model = item.imageUrl,
+        contentDescription = null,
+        modifier = modifier,
+        contentScale = ContentScale.Crop,
+        loading = {
+            PlaceInitialPlaceholder(
+                initial = initial,
+                modifier = Modifier.fillMaxSize()
+            )
+        },
+        error = {
+            PlaceInitialPlaceholder(
+                initial = initial,
+                modifier = Modifier.fillMaxSize()
+            )
+        },
+        success = {
+            SubcomposeAsyncImageContent()
+        }
+    )
+}
+
+@Composable
+private fun PlaceInitialPlaceholder(
+    initial: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.background(
+            color = MaterialTheme.colorScheme.primaryContainer
+        ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = initial,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
     }
 }
 
