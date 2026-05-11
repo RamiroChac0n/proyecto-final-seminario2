@@ -1,6 +1,6 @@
 package com.example.proyecto_final_seminario2.ui.businessdetail
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,13 +47,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.proyecto_final_seminario2.data.explorer.models.Business
 
-
-private val DetailBackground = LocalBackground
-private val PrimaryBlue = LocalPrimary
-private val TextPrimary = LocalTextPrimary
-private val TextMuted = LocalTextMuted
-private val BorderSoft = LocalBorder
-
 @Composable
 fun BusinessDetailScreen(
     business: Business?,
@@ -62,14 +56,17 @@ fun BusinessDetailScreen(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = DetailBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onRateClick,
-                containerColor = PrimaryBlue,
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = null
+                )
             }
         }
     ) { padding ->
@@ -108,27 +105,34 @@ private fun DetailTopBar(onBackClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBackClick) {
-            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+            Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground
+            )
         }
+
         Text(
             text = "Detalle de Negocio",
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.weight(1f)
         )
+
         Spacer(modifier = Modifier.width(48.dp))
     }
 }
 
 @Composable
 private fun DetailHero(business: Business) {
+    val heroContentColor = MaterialTheme.colorScheme.inverseOnSurface
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1.7f)
             .clip(RoundedCornerShape(2.dp))
-            .animateContentSize()
     ) {
         AsyncImage(
             model = business.imageUrl,
@@ -136,6 +140,7 @@ private fun DetailHero(business: Business) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -143,11 +148,12 @@ private fun DetailHero(business: Business) {
                     Brush.verticalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            Color(0x99000000)
+                            MaterialTheme.colorScheme.scrim.copy(alpha = 0.65f)
                         )
                     )
                 )
         )
+
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -155,33 +161,37 @@ private fun DetailHero(business: Business) {
         ) {
             Surface(
                 shape = RoundedCornerShape(50),
-                color = Color(0xFF67D7CD)
+                color = MaterialTheme.colorScheme.secondaryContainer
             ) {
                 Text(
                     text = business.category.label.dropLastWhile { it == 's' },
                     fontSize = 11.sp,
-                    color = Color(0xFF063C3A),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                 )
             }
+
             Spacer(modifier = Modifier.height(6.dp))
+
             Text(
                 text = business.name,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = heroContentColor
             )
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Filled.LocationOn,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = heroContentColor,
                     modifier = Modifier.size(16.dp)
                 )
+
                 Text(
                     text = "Av. Principal 123, Centro Historico",
                     fontSize = 12.sp,
-                    color = Color.White
+                    color = heroContentColor
                 )
             }
         }
@@ -197,33 +207,36 @@ private fun MetricsGrid(business: Business) {
                 value = business.rating.toString(),
                 suffix = "/5.0",
                 icon = Icons.Filled.Star,
-                tint = PrimaryBlue,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
             )
+
             MetricCard(
                 title = "Atencion",
                 value = "4.5",
                 suffix = "/5.0",
                 icon = Icons.Filled.ThumbUp,
-                tint = Color(0xFF008E8A),
+                tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(1f)
             )
         }
+
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             MetricCard(
                 title = "Precio",
                 value = "Q25 - Q45",
                 suffix = "",
                 icon = Icons.Filled.AttachMoney,
-                tint = Color(0xFF7A4B00),
+                tint = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.weight(1f)
             )
+
             MetricCard(
                 title = "Tiempo de espera",
                 value = "15m promedio",
                 suffix = "",
                 icon = Icons.Filled.AccessTime,
-                tint = Color(0xFFE02020),
+                tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -240,11 +253,11 @@ private fun MetricCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
-            .height(88.dp)
-            .animateContentSize(),
+        modifier = modifier.height(88.dp),
         shape = RoundedCornerShape(6.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(
@@ -258,19 +271,32 @@ private fun MetricCard(
                     tint = tint,
                     modifier = Modifier.size(16.dp)
                 )
+
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(text = title, fontSize = 12.sp, color = Color(0xFF344054))
+
+                Text(
+                    text = title,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
+
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     text = value,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TextPrimary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
+
                 if (suffix.isNotBlank()) {
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text(text = suffix, fontSize = 11.sp, color = TextMuted)
+
+                    Text(
+                        text = suffix,
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }
@@ -281,11 +307,11 @@ private fun MetricCard(
 private fun RecommendationCard(business: Business) {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF0066A0)),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize()
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -294,19 +320,37 @@ private fun RecommendationCard(business: Business) {
             Icon(
                 imageVector = Icons.Filled.ThumbUp,
                 contentDescription = null,
-                tint = Color(0xFF8FD0FF),
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(28.dp)
             )
+
             Spacer(modifier = Modifier.width(12.dp))
+
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = "Tasa de", color = Color(0xFFB8E1FF), fontSize = 12.sp)
-                Text(text = "recomendacion", color = Color(0xFFB8E1FF), fontSize = 12.sp)
+                Text(
+                    text = "Tasa de",
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    fontSize = 12.sp
+                )
+
+                Text(
+                    text = "recomendacion",
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    fontSize = 12.sp
+                )
+
                 Spacer(modifier = Modifier.height(6.dp))
-                Text(text = "Basado en 142 valoraciones", color = Color(0xFF8DC7EA), fontSize = 11.sp)
+
+                Text(
+                    text = "Basado en 142 valoraciones",
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
+                    fontSize = 11.sp
+                )
             }
+
             Text(
                 text = "${business.recommendationPercent}%",
-                color = Color(0xFF9BDBFF),
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -321,44 +365,41 @@ private fun HighlightedQualities(tags: List<String>) {
             text = "Cualidades Destacadas",
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = TextPrimary
+            color = MaterialTheme.colorScheme.onBackground
         )
+
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             tags.take(3).forEach { tag ->
                 Surface(
                     shape = RoundedCornerShape(50),
-                    color = Color.White,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderSoft)
+                    color = MaterialTheme.colorScheme.surface,
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outline
+                    )
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = qualityIcon(tag),
+                            imageVector = Icons.Filled.Star,
                             contentDescription = null,
-                            tint = Color(0xFF475467),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(12.dp)
                         )
+
                         Spacer(modifier = Modifier.width(4.dp))
+
                         Text(
                             text = tag.uppercase(),
                             fontSize = 11.sp,
-                            color = Color(0xFF475467)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
             }
         }
-    }
-}
-
-private fun qualityIcon(tag: String): ImageVector {
-    val normalized = tag.lowercase()
-    return when {
-        "precio" in normalized -> Icons.Filled.AttachMoney
-        "puntual" in normalized || "rapida" in normalized || "rapido" in normalized -> Icons.Filled.AccessTime
-        else -> Icons.Filled.Star
     }
 }
 
@@ -369,6 +410,10 @@ private fun MissingBusinessContent(
 ) {
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
         DetailTopBar(onBackClick = onBackClick)
-        Text(text = "No se encontro el negocio.", color = TextPrimary)
+
+        Text(
+            text = "No se encontro el negocio.",
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }
