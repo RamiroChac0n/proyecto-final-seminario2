@@ -14,6 +14,8 @@ fun BusinessDetailRoute(
     onBackClick: () -> Unit,
     onRateClick: (String) -> Unit,
     viewModelFactory: ViewModelProvider.Factory,
+    refreshRatings: Boolean = false,
+    onRefreshRatingsConsumed: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val viewModel: BusinessDetailViewModel = viewModel(
@@ -24,6 +26,13 @@ fun BusinessDetailRoute(
 
     LaunchedEffect(businessId) {
         viewModel.loadPlaceDetails(businessId)
+    }
+
+    LaunchedEffect(refreshRatings) {
+        if (refreshRatings) {
+            viewModel.loadPlaceDetails(businessId)
+            onRefreshRatingsConsumed()
+        }
     }
 
     BusinessDetailScreen(

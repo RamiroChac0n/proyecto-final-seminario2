@@ -14,6 +14,8 @@ import com.example.proyecto_final_seminario2.data.places.repositories.GooglePlac
 import com.example.proyecto_final_seminario2.data.places.repositories.GooglePlacesRepository
 import com.example.proyecto_final_seminario2.data.places.repositories.PlaceDetailsRepository
 import com.example.proyecto_final_seminario2.data.places.repositories.PlacesRepository
+import com.example.proyecto_final_seminario2.data.rating.repositories.RatingRepository
+import com.example.proyecto_final_seminario2.data.rating.repositories.RoomRatingRepository
 import com.google.android.gms.location.LocationServices
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
@@ -51,6 +53,10 @@ class AppContainer(context: Context) {
     val placeDetailsRepository: PlaceDetailsRepository = GooglePlaceDetailsRepository(
         remoteDataSource = googlePlacesDataSource,
         placeDao = database.placeDao()
+    )
+
+    val ratingRepository: RatingRepository = RoomRatingRepository(
+        ratingDao = database.ratingDao()
     )
 
     private fun createPlacesClient(): PlacesClient? {

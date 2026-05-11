@@ -7,16 +7,19 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.proyecto_final_seminario2.data.local.dao.PlaceDao
+import com.example.proyecto_final_seminario2.data.local.dao.RatingDao
 import com.example.proyecto_final_seminario2.data.local.dao.UserDao
 import com.example.proyecto_final_seminario2.data.local.entities.PlaceEntity
+import com.example.proyecto_final_seminario2.data.local.entities.RatingEntity
 import com.example.proyecto_final_seminario2.data.local.entities.UserEntity
 
 @Database(
     entities = [
         UserEntity::class,
-        PlaceEntity::class
+        PlaceEntity::class,
+        RatingEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -24,6 +27,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 
     abstract fun placeDao(): PlaceDao
+
+    abstract fun ratingDao(): RatingDao
 
     companion object {
         private const val DATABASE_NAME = "punto_local_database"
@@ -61,6 +66,28 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS ratings (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        business_id TEXT NOT NULL,
+                        paid_price TEXT NOT NULL,
+                        visit_date TEXT NOT NULL,
+                        service_rating INTEGER NOT NULL,
+                        attention_rating INTEGER NOT NULL,
+                        satisfaction_rating INTEGER NOT NULL,
+                        wait_time TEXT NOT NULL,
+                        recommends INTEGER NOT NULL,
+                        highlighted_qualities TEXT NOT NULL,
+                        created_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -68,7 +95,11 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(
+                        MIGRATION_1_2,
+                        MIGRATION_2_3,
+                        MIGRATION_3_4
+                    )
                     .build()
 
                 INSTANCE = instance

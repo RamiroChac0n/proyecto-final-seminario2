@@ -7,6 +7,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -131,6 +133,10 @@ fun AppNavGraph(
                     }
                 )
             ) { backStackEntry ->
+                val ratingSaved by backStackEntry.savedStateHandle
+                    .getStateFlow("rating_saved", false)
+                    .collectAsState()
+
                 BusinessDetailRoute(
                     businessId = backStackEntry.arguments
                         ?.getString("businessId")
@@ -143,7 +149,11 @@ fun AppNavGraph(
                             "${AppDestination.RatingForm}/${Uri.encode(businessId)}"
                         )
                     },
-                    viewModelFactory = viewModelFactory
+                    viewModelFactory = viewModelFactory,
+                    refreshRatings = ratingSaved,
+                    onRefreshRatingsConsumed = {
+                        backStackEntry.savedStateHandle["rating_saved"] = false
+                    }
                 )
             }
 
@@ -162,9 +172,14 @@ fun AppNavGraph(
                     onBackClick = {
                         navController.popBackStack()
                     },
-                    onSubmitClick = {
+                    onSubmitSuccess = {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("rating_saved", true)
+
                         navController.popBackStack()
-                    }
+                    },
+                    viewModelFactory = viewModelFactory
                 )
             }
         }
