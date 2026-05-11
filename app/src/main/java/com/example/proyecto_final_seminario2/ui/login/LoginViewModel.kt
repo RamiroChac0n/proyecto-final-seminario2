@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+
+
 class LoginViewModel(
     private val loginRepository: LoginRepository
 ) : ViewModel() {
@@ -32,19 +34,22 @@ class LoginViewModel(
 
     fun onLoginClick() {
         val current = _uiState.value
+
         val email = current.email.trim()
         val password = current.password
 
         if (email.isBlank() || password.isBlank()) {
             _uiState.value = current.copy(
-                errorMessage = "Correo y contraseña son requeridos"
+                errorMessage = "Correo y contraseña son requeridos",
+                isSuccess = false
             )
             return
         }
 
         if (!email.contains("@")) {
             _uiState.value = current.copy(
-                errorMessage = "Ingresa un correo válido"
+                errorMessage = "Ingresa un correo válido",
+                isSuccess = false
             )
             return
         }
@@ -70,10 +75,16 @@ class LoginViewModel(
             }.onFailure { throwable ->
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    errorMessage = throwable.message ?: "Error de autenticación",
+                    errorMessage = throwable.message ?: "No se pudo iniciar sesión",
                     isSuccess = false
                 )
             }
         }
+    }
+
+    fun clearSuccess() {
+        _uiState.value = _uiState.value.copy(
+            isSuccess = false
+        )
     }
 }

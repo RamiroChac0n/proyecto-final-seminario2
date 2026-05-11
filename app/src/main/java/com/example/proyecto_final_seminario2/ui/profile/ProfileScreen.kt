@@ -1,7 +1,6 @@
 package com.example.proyecto_final_seminario2.ui.profile
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,83 +11,44 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.filled.RateReview
+import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.example.proyecto_final_seminario2.ui.explorer.components.ExplorerTopBar
-
-private const val MockAvatarUrl =
-    "https://api.dicebear.com/9.x/lorelei/png?seed=tito%40ejemplo.com&size=128"
-
-private data class ProfileReview(
-    val businessName: String,
-    val category: String,
-    val date: String,
-    val rating: Float,
-    val priceRange: String,
-    val recommendationPercent: Int,
-    val tags: List<String>
-)
-
-private val mockReviews = listOf(
-    ProfileReview(
-        businessName = "La Parrilla del Barrio",
-        category = "Restaurante",
-        date = "01/05/2026",
-        rating = 4.5f,
-        priceRange = "Q25-Q45",
-        recommendationPercent = 95,
-        tags = listOf("Precio accesible", "Puntualidad")
-    ),
-    ProfileReview(
-        businessName = "Farmacia El Pueblo",
-        category = "Farmacia",
-        date = "16/04/2026",
-        rating = 4.2f,
-        priceRange = "Q10-Q150",
-        recommendationPercent = 80,
-        tags = listOf("Atencion rapida", "Precio accesible")
-    ),
-    ProfileReview(
-        businessName = "Cafe Central",
-        category = "Restaurante",
-        date = "12/04/2026",
-        rating = 3.5f,
-        priceRange = "Q25-Q45",
-        recommendationPercent = 75,
-        tags = emptyList()
-    )
-)
+import com.example.proyecto_final_seminario2.data.profile.models.ProfileReviewItem
+import com.example.proyecto_final_seminario2.data.profile.models.UserProfile
+import com.example.proyecto_final_seminario2.ui.common.AppTopBar
+import com.example.proyecto_final_seminario2.ui.navigation.AppBottomBar
+import com.example.proyecto_final_seminario2.ui.navigation.AppTab
 
 @Composable
 fun ProfileScreen(
+    state: ProfileUiState,
     onExploreClick: () -> Unit,
+    onRetryClick: () -> Unit,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -96,187 +56,47 @@ fun ProfileScreen(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            ExplorerTopBar(title = "Punto Local")
+            AppTopBar(title = "Punto Local")
         },
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface
-            ) {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = onExploreClick,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Explore,
-                            contentDescription = null
-                        )
-                    },
-                    label = {
-                        Text(text = "Explorar")
-                    }
-                )
-
-                NavigationBarItem(
-                    selected = true,
-                    onClick = {},
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = null
-                        )
-                    },
-                    label = {
-                        Text(text = "Perfil")
-                    }
-                )
-            }
+            AppBottomBar(
+                selectedTab = AppTab.Profile,
+                onExploreClick = onExploreClick,
+                onProfileClick = {}
+            )
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            item {
-                ProfileHeader(onLogoutClick = onLogoutClick)
-            }
-
-            item {
-                TotalReviewsCard(total = 42)
-            }
-
-            item {
-                Text(
-                    text = "Historial",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            items(mockReviews) { review ->
-                HistoryCard(review = review)
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-        }
-    }
-}
-
-@Composable
-private fun ProfileHeader(onLogoutClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 18.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Surface(
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.surface,
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline
-            ),
-            modifier = Modifier.size(76.dp)
-        ) {
-            AsyncImage(
-                model = MockAvatarUrl,
-                contentDescription = "Avatar de Tito Calderon",
-                modifier = Modifier
-                    .size(76.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        Text(
-            text = "Tito Calderon",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        Text(
-            text = "tito@ejemplo.com",
-            fontSize = 13.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        OutlinedButton(
-            onClick = onLogoutClick,
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = MaterialTheme.colorScheme.error
-            ),
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.error
-            )
-        ) {
-            Text(
-                text = "Cerrar sesion",
-                fontSize = 12.sp
-            )
-        }
-    }
-}
-
-@Composable
-private fun TotalReviewsCard(total: Int) {
-    Card(
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outline
-        ),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(44.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = Icons.Filled.Star,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(24.dp)
-                    )
+        when {
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column {
-                Text(
-                    text = "TOTAL VALORACIONES",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            state.errorMessage != null -> {
+                ErrorProfileContent(
+                    message = state.errorMessage,
+                    onRetryClick = onRetryClick,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(16.dp)
                 )
+            }
 
-                Text(
-                    text = total.toString(),
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+            state.profile != null -> {
+                ProfileContent(
+                    profile = state.profile,
+                    onLogoutClick = onLogoutClick,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(16.dp)
                 )
             }
         }
@@ -284,71 +104,310 @@ private fun TotalReviewsCard(total: Int) {
 }
 
 @Composable
-private fun HistoryCard(review: ProfileReview) {
+private fun ErrorProfileContent(
+    message: String,
+    onRetryClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = message,
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        TextButton(onClick = onRetryClick) {
+            Text(text = "Reintentar")
+        }
+    }
+}
+
+@Composable
+private fun ProfileContent(
+    profile: UserProfile,
+    onLogoutClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        item {
+            UserHeaderCard(
+                profile = profile,
+                onLogoutClick = onLogoutClick
+            )
+        }
+
+        item {
+            Text(
+                text = "Mis reseñas",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        if (profile.reviews.isEmpty()) {
+            item {
+                EmptyReviewsCard()
+            }
+        } else {
+            items(profile.reviews) { review ->
+                ReviewCard(review = review)
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(64.dp))
+        }
+    }
+}
+
+@Composable
+private fun UserHeaderCard(
+    profile: UserProfile,
+    onLogoutClick: () -> Unit
+) {
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.outlineVariant
         ),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(14.dp)) {
-            Row(verticalAlignment = Alignment.Top) {
-                Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.size(56.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 12.dp)
+                ) {
                     Text(
-                        text = review.businessName,
-                        fontSize = 15.sp,
+                        text = profile.user.name,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
-                    Text(
-                        text = review.category.uppercase(),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Filled.Email,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(14.dp)
+                        )
+
+                        Text(
+                            text = profile.user.email,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                    }
                 }
+            }
+
+            ProfileStatRow(
+                icon = Icons.Filled.RateReview,
+                label = "Reseñas realizadas",
+                value = profile.totalReviews.toString()
+            )
+
+            Button(
+                onClick = onLogoutClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Logout,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
 
                 Text(
-                    text = review.date,
-                    fontSize = 10.sp,
+                    text = "Cerrar sesión",
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProfileStatRow(
+    icon: ImageVector,
+    label: String,
+    value: String
+) {
+    Surface(
+        shape = RoundedCornerShape(10.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
+            )
+
+            Text(
+                text = label,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 13.sp,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+            )
+
+            Text(
+                text = value,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyReviewsCard() {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant
+        ),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = "Aún no has realizado reseñas. Explora un lugar y presiona el botón + para calificarlo.",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@Composable
+private fun ReviewCard(review: ProfileReviewItem) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant
+        ),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                text = review.placeName,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Text(
+                text = review.placeCategory,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            if (!review.placeAddress.isNullOrBlank()) {
+                Text(
+                    text = review.placeAddress,
+                    fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RatingBadge(rating = review.rating)
-
-                Text(
-                    text = review.priceRange,
-                    fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Text(
-                    text = "${review.recommendationPercent}% recomienda",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                RatingMiniPill(label = "Servicio", value = review.serviceRating)
+                RatingMiniPill(label = "Atención", value = review.attentionRating)
+                RatingMiniPill(label = "Satisfacción", value = review.satisfactionRating)
             }
 
-            if (review.tags.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
+            ProfileStatRow(
+                icon = Icons.Filled.ThumbUp,
+                label = "Recomienda",
+                value = if (review.recommends) "Sí" else "No"
+            )
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    review.tags.take(2).forEach { tag ->
-                        QualityPill(text = tag)
+            Text(
+                text = "Tiempo de espera: ${review.waitTime}",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Text(
+                text = "Precio pagado: ${review.paidPrice}",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            if (review.highlightedQualities.isNotEmpty()) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "Cualidades destacadas",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    review.highlightedQualities.forEach { quality ->
+                        Surface(
+                            shape = RoundedCornerShape(50),
+                            color = MaterialTheme.colorScheme.primaryContainer
+                        ) {
+                            Text(
+                                text = quality.uppercase(),
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -357,46 +416,20 @@ private fun HistoryCard(review: ProfileReview) {
 }
 
 @Composable
-private fun RatingBadge(rating: Float) {
-    Row(
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(4.dp)
-            )
-            .padding(horizontal = 7.dp, vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Star,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.size(12.dp)
-        )
-
-        Spacer(modifier = Modifier.width(3.dp))
-
-        Text(
-            text = rating.toString(),
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-    }
-}
-
-@Composable
-private fun QualityPill(text: String) {
+private fun RatingMiniPill(
+    label: String,
+    value: Int
+) {
     Surface(
         shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = MaterialTheme.colorScheme.secondaryContainer
     ) {
         Text(
-            text = text.uppercase(),
-            fontSize = 10.sp,
+            text = "$label: $value",
+            fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
         )
     }
 }
