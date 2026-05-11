@@ -99,7 +99,8 @@ fun AppNavGraph(
                     },
                     onProfileClick = {
                         navController.navigate(AppDestination.Profile)
-                    }
+                    },
+                    viewModelFactory = viewModelFactory
                 )
             }
 

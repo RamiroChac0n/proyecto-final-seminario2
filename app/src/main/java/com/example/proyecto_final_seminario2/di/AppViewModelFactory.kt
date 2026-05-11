@@ -2,6 +2,7 @@ package com.example.proyecto_final_seminario2.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.proyecto_final_seminario2.ui.explorer.ExplorerViewModel
 import com.example.proyecto_final_seminario2.ui.login.LoginViewModel
 import com.example.proyecto_final_seminario2.ui.register.RegisterViewModel
 
@@ -21,6 +22,13 @@ class AppViewModelFactory(
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(
                     registerRepository = appContainer.registerRepository
+                ) as T
+            }
+
+            modelClass.isAssignableFrom(ExplorerViewModel::class.java) -> {
+                ExplorerViewModel(
+                    placesRepository = appContainer.placesRepository,
+                    locationRepository = appContainer.locationRepository
                 ) as T
             }
 
