@@ -7,6 +7,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+<<<<<<< Updated upstream
+=======
+
+/**
+ * Maneja el estado del formulario de login.
+ *
+ * Valida campos basicos antes de delegar la autenticacion al repositorio.
+ */
+>>>>>>> Stashed changes
 class LoginViewModel(
     private val loginRepository: LoginRepository? = null
 ) : ViewModel() {
@@ -24,8 +33,20 @@ class LoginViewModel(
     fun onLoginClick() {
         val current = _uiState.value
 
+<<<<<<< Updated upstream
         if (current.email.isBlank() || current.password.isBlank()) {
             _uiState.value = current.copy(errorMessage = "Email y contraseña son requeridos")
+=======
+        val email = current.email.trim()
+        val password = current.password
+
+        // Validaciones de interfaz: evitan llamadas innecesarias al repositorio.
+        if (email.isBlank() || password.isBlank()) {
+            _uiState.value = current.copy(
+                errorMessage = "Correo y contraseña son requeridos",
+                isSuccess = false
+            )
+>>>>>>> Stashed changes
             return
         }
 
@@ -59,3 +80,13 @@ class LoginViewModel(
     }
 }
 
+<<<<<<< Updated upstream
+=======
+    fun clearSuccess() {
+        // Permite que la ruta consuma el exito de login sin volver a navegar.
+        _uiState.value = _uiState.value.copy(
+            isSuccess = false
+        )
+    }
+}
+>>>>>>> Stashed changes

@@ -17,6 +17,9 @@ data class RegistrationUiState(
     val isSuccess: Boolean = false
 )
 
+/**
+ * Maneja el estado y validaciones del formulario de registro.
+ */
 class RegisterViewModel(
     private val registerRepository: RegisterRepository? = null
 ) : ViewModel() {
@@ -42,8 +45,26 @@ class RegisterViewModel(
     fun onCreateAccountClick() {
         val current = _uiState.value
 
+<<<<<<< Updated upstream
         if (current.name.isBlank() || current.email.isBlank() || current.password.isBlank()) {
             _uiState.value = current.copy(errorMessage = "Todos los campos son requeridos")
+=======
+        val name = current.name.trim()
+        val email = current.email.trim()
+        val password = current.password
+        val confirmPassword = current.confirmPassword
+
+        // Todas estas validaciones son locales y dan respuesta inmediata al usuario.
+        if (
+            name.isBlank() ||
+            email.isBlank() ||
+            password.isBlank() ||
+            confirmPassword.isBlank()
+        ) {
+            _uiState.value = current.copy(
+                errorMessage = "Todos los campos son requeridos"
+            )
+>>>>>>> Stashed changes
             return
         }
 
@@ -86,4 +107,7 @@ class RegisterViewModel(
         }
     }
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
